@@ -7,11 +7,13 @@
     <img src="../assets/♡.jpg" alt="Background Image">
   </div>
   
-      <div class="imgInside">
-        <div class="imgBanner"></div>
+      <div class="imgInsideGirl">
+        <div class="imgBanner">
+        </div>
       </div>
-      
+      <div class="imgInsideGirlHands">
       <div class="imgHands"></div>
+    </div>
     </div>
     
 
@@ -35,14 +37,14 @@ export default defineComponent({
 #emotakuGirl {
   
   overflow: visible;
-  width: 1100px;
+  width: 100%;
   height: 231px;
-  outline: 3px solid #34f2ff;
   background-color: transparent;
   box-sizing: border-box;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   position: relative;
   perspective: 70px; /* Profundidad de perspectiva */
+
 }
 
 span {
@@ -81,7 +83,6 @@ span {
   
 }
 
-
 .backgroundWrapper img {
   width: 48%; /* Ajustar el tamaño de la imagen de fondo según sea necesario */
   object-fit: cover;
@@ -90,27 +91,27 @@ span {
   margin-top: -220px;
 }
 
-.imgInside {
-  overflow: hidden;
-  margin: 0 auto;
-  width: 1100px;
-  height: 231px;
-  outline: 3px solid #34f2ff;
+.imgInsideGirl,
+.imgInsideGirlHands {
+  
+  width: 100%; /* Ajusta el ancho según tus necesidades */
+  height: 231px; /* Ajusta la altura según tus necesidades */
+  outline: var(--outlineContent);
   background-color: transparent;
   box-sizing: border-box;
-  margin-bottom: 10px;
-  position: relative;
-  perspective: 70px; /* Profundidad de perspectiva */
   position: absolute;
+  z-index: 999;
 }
+.imgInsideGirl {
+  overflow: hidden;
+}
+
 .imgBanner{
   width: 680px;
   height: 350px;
   object-fit: cover;
   pointer-events: none;
-  display: block;
   z-index: 10;
-  margin-bottom: 3px;
   position: relative;
   background-image: url('../assets/blueemotaku.png');
   background-size: cover;
@@ -118,11 +119,9 @@ span {
   float: right;
   margin-right: -50px;
   
-  
 }
 .imgHands {
-  
-  width: 680px;
+  width: 590px;
   height: 350px;
   object-fit: cover;
   pointer-events: none;
@@ -134,10 +133,6 @@ span {
   background-size: cover;
   background-position: 0 -210px;
   right: 0;
-  
-  perspective: 70px; /* Profundidad de perspectiva */
-  margin-right: -50px;
-
 
 }
 
@@ -161,7 +156,12 @@ span {
 100% {
   opacity: 1;
 }
-}
 
+}
+@media (max-width: 476px){
+  span {
+    font-size: 70px;
+  }
+}
 </style>
   
