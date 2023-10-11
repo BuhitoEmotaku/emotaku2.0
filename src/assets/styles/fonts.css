@@ -1,0 +1,34 @@
+@font-face {
+    font-family: "Pixel Operator";
+    src: url("../fonts/PixelOperator8.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Kamikaze";
+    src: url("../fonts/KamikazeItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Japanese Personal";
+    src: url("../fonts/KongJapanese-Wy7PA.otf") format("opentype");
+}
+@font-face {
+    font-family: "Akira";
+    src: url("../fonts/AkiraDEMO.otf") format("opentype");
+}
+@font-face {
+    font-family: "KawaiCity";
+    src: url("../fonts/KAWAI-CITY.otf") format("opentype");
+}
+@font-face {
+    font-family: "NichiBotsu";
+    src: url("../fonts/NichibotsuDemoRegular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SamuraiBlast";
+    src: url("../fonts/SamuraiBlast.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Tetsuya";
+    src: url("../fonts/TetsuyaDemoRegular.ttf") format("truetype");
+}
+
