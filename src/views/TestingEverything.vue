@@ -1,8 +1,14 @@
 <template>
-    <div class="home">
+    <div class="testingZone">
         <img alt="Vue logo" src="../assets/logo.png">
         <WelcomeEmotaku msg="Welcome to Your Vue.js + TypeScript App" />
     </div>
+    <h1>HOLA</h1>
+    <h1>HOLA</h1>
+    <h1>HOLA</h1>
+    <h1>HOLA</h1>
+    <h1>HOLA</h1>
+    <h1>HOLA</h1>
 </template>
   
 <script lang="ts">
@@ -18,4 +24,5 @@ export default defineComponent({
 
 
 </script>
-<style scoped></style>
+<style scoped>
+</style>
