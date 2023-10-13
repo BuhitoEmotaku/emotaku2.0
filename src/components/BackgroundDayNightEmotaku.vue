@@ -1,7 +1,7 @@
 <template>
-  <div :class="['backgroundSetup', currentBackgroundClass]" :style="{ opacity: currentOpacity }">
-    <!-- Contenido de tu aplicación -->
-  </div>
+    <div :class="['backgroundSetup', currentBackgroundClass]" :style="{ opacity: currentOpacity }">
+      <!-- Contenido de tu aplicación -->
+    </div>
 </template>
   
 <script lang="ts">
@@ -56,27 +56,29 @@ export default defineComponent({
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .backgroundSetup {
-    filter: blur(5px) hue-rotate(330deg);
-      background-size: cover;
-      background-repeat: no-repeat;
-      min-height: 100vh;
-      min-width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-position: center;
-      z-index: -9999;
-      transition: opacity 2s ease; /* Transición de 2 segundos de opacidad */
+.backgroundSetup {
+  filter: blur(5px) hue-rotate(330deg);
+  background-size: cover;
+  /* La imagen se ajusta para cubrir todo el elemento */
+  background-repeat: repeat;
+  /* Asegura que la imagen de fondo se repita */
+  min-height: 100vh;
+  min-width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-position: center;
+  z-index: -9999;
+  transition: opacity 2s ease;
+  /* Transición de 2 segundos de opacidad */
 }
 
 .backgroundImgDay {
-      background-image: url("../assets/19276.jpg");
-      background-color: rgb(211, 77, 99); /* Rosa claro */
+  background-image: url("../assets/19276.jpg");
+  background-color: rgb(211, 77, 99);
+  /* Rosa claro */
 }
+
 .backgroundImgNight {
-      background-image: url("../assets/813919.jpg");
-      
-  }
-</style>
-  
+  background-image: url("../assets/813919.jpg");
+}</style>
