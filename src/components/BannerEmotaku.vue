@@ -1,9 +1,9 @@
 <template>
   <header>
-    <span class="emoTitle emo">EMO</span><span class="takuTitle">TAKU</span>
+    <span class="emoTitle">EMO</span><span class="takuTitle">TAKU</span>
     <div id="emotakuGirl">
+      <img @click="playPauseAudio" src="../assets/images/characters/pikachu.png" alt="" class="pikachuCharacter">
       <div class="backgroundWrapper">
-
         <!-- Aquí puedes poner tu imagen de fondo -->
         <img src="../assets/♡.jpg" alt="Background Image">
       </div>
@@ -20,13 +20,25 @@
 </template>
   
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'BannerEmotaku',
-  props: {
-    msg: String,
-  },
+  setup(){
+
+    const hasMouseMoved = ref(false);
+    const audioPikachu = new Audio('../src/assets/music/pikachuSound.mp3');
+    audioPikachu.volume = 0.19;
+    const audioEnabled = ref(false);
+
+    const playPauseAudio = () => {
+      audioPikachu.play();
+    };
+    return {
+      playPauseAudio
+    }
+  }
+
 });
 </script>
   
@@ -47,7 +59,7 @@ export default defineComponent({
 
 span {
   font-family: Tetsuya;
-  font-size: 100px;
+  font-size: 122px;
   text-align: center;
   color: rgba(242, 188, 247, 0.91);
   text-shadow: 0 0 80px #4a0086, 0 0 10px #4a0086, 0 0 15px #4a0086, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
@@ -55,6 +67,8 @@ span {
 
 .emoTitle {
   animation: glow 4.76s ease-in-out infinite alternate, parpadeo .07s infinite;
+  z-index: 10;
+  position: relative;
 }
 
 .takuTitle {
@@ -140,6 +154,23 @@ span {
 
 }
 
+.pikachuCharacter {
+  position: absolute;
+  width: 50px;
+  height: auto;
+  left: 0;
+  margin-top: -47px;
+  margin-left: -5px;
+  transform: rotate(-30deg);
+  cursor: pointer;
+  filter: hue-rotate(331.2deg);
+}
+.pikachuCharacter:hover{
+  filter: hue-rotate(190deg);
+  transform: rotate(0deg);
+}
+
+
 @keyframes parpadeo {
   0% {
     opacity: 0.99;
@@ -163,10 +194,25 @@ span {
 
 }
 
+@media (max-width: 1110px) {
+  #emotakuGirl {
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  
+}
+@media (max-width: 650px) {
+  span {
+    font-size: 100px;
+  }
+}
+
 @media (max-width: 476px) {
   span {
     font-size: 70px;
   }
+  
 }
 </style>
   

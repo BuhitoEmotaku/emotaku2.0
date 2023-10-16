@@ -16,7 +16,7 @@ export default defineComponent({
 
     // Calcula la clase de fondo en función de la hora actual
     const backgroundClass = computed(() => {
-      if (currentTime.value >= 6 && currentTime.value < 20) {
+      if (currentTime.value >= 6 && currentTime.value < 10) {
         return 'backgroundImgDay';
       } else {
         return 'backgroundImgNight';
@@ -57,6 +57,7 @@ export default defineComponent({
   <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .backgroundSetup {
+  /*330*/
   filter: blur(5px) hue-rotate(330deg);
   background-size: cover;
   /* La imagen se ajusta para cubrir todo el elemento */

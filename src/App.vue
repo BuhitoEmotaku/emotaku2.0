@@ -4,7 +4,6 @@
   <BannerEmotaku></BannerEmotaku>
   <MainEmotaku></MainEmotaku>
   <FooterEmotaku></FooterEmotaku>
-  
 </template>
 
 
@@ -25,16 +24,12 @@ export default defineComponent({
     MainEmotaku,
     FooterEmotaku
 
-  },
-
+  }
 });
 </script>
 
 
 <style>
-
-
-
 nav {
   padding: 30px;
 }
@@ -47,6 +42,4 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
-
-
 </style>

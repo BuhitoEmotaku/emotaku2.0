@@ -29,5 +29,13 @@ footer {
   width: 50%;
   padding: 3px;
  }
+
+ @media (max-width: 1110px) {
+  footer {
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 30px;
+  }
+}
   </style>
   
