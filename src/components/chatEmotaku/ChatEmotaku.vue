@@ -1,10 +1,20 @@
 <template>
+  <h1 class="titleChatEmotaku">CHAT EMOTAKU</h1>
+  <div class="mainSendMessage">
+    <div class="messageToSend">
+      <label for="messageToSend">
+        <input type="text" id="messageToSend" v-model="messageCreated"
+          placeholder="Bienvenido al chat! -- Se respetuoso y amable <3 ^^*" autocomplete="off" maxlength="300" required>
+      </label>
+    </div>
+
+    <button class="sendMessageButton" @click="sendNewMessage(messageCreated)">Enviar</button>
+  </div>
+
+
   <div class="chatEmotakuStyler">
-    <h1 class="titleChatEmotaku">CHAT EMOTAKU</h1>
-    <button
-      @click="sendNewMessage('Estoy hasta la pinga de física, quiero cagarme en peter la anguila. Cabrónnnn, deja de robar comida')">
-      Click to send</button>
     <div class="messagesContainer">
+      <div class="khe" ref="bottom" />
       <div class="chatEmotaku" v-for="message in messages" :key="message.id">
         <span class="chatUser">&lt{{ message.userName }}></span>
         <div class="messageData">
@@ -14,13 +24,11 @@
       </div>
     </div>
 
-    <div class="khe" ref="bottom" />
-
   </div>
 </template>
   
 <script lang="ts">
-import { defineComponent, nextTick, ref, watch } from 'vue';
+import { defineComponent, nextTick, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import type { Ref } from 'vue';
 import { useChat } from '@/assets/scripts/firebase';
 
@@ -34,15 +42,18 @@ interface Message {
 export default defineComponent({
   name: 'ChatEmotaku',
   setup() {
+    const messageCreated = ref('')
     const { messages, sendMessage } = useChat();
     const message = ref('');
     const bottom: Ref<HTMLElement | null> = ref(null);
 
     const sendNewMessage = (text: string) => {
-      sendMessage(text, 'RoverxD'); // Puedes pasar el nombre de usuario aquí
-      console.log(messages.value);
-    };
+      if (text != '') {
+        sendMessage(text, ''); // Puedes pasar el nombre de usuario aquí
+        messageCreated.value = '';
+      }
 
+    };
 
     const time24Hours = (timestamp: number) => {
       const fecha = new Date(timestamp * 1000); // Multiplica por 1000 para convertir a milisegundos
@@ -52,11 +63,34 @@ export default defineComponent({
       return `${horas}:${minutos}:${segundos}`;
     }
 
+    const checkerOnWeb = ref(true);
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        checkerOnWeb.value = false;
+        // La página está oculta, el usuario cambió de pestaña o aplicación
+        // Puedes detener el sonido aquí o realizar cualquier otra acción.
+      } else {
+        checkerOnWeb.value = true;
+        // La página está enfocada, el usuario volvió a ella
+        // Puedes iniciar el sonido o realizar cualquier otra acción.
+      }
+    };
+
+    onMounted(() => {
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      // Asegúrate de eliminar el evento cuando el componente se desmonta
+      onBeforeUnmount(() => {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      });
+    });
 
     watch(
       messages,
       () => {
+        if (checkerOnWeb.value != true)
+          console.log('try');
         nextTick(() => {
           bottom.value?.scrollIntoView({ behavior: 'smooth' });
         })
@@ -67,7 +101,7 @@ export default defineComponent({
       }
     )
 
-    return { message, messages, sendNewMessage, time24Hours };
+    return { message, messages, messageCreated, sendNewMessage, time24Hours };
   }
 });
 </script>
@@ -77,10 +111,49 @@ export default defineComponent({
 .chatEmotakuStyler {
   border: 2px solid white;
   padding: 0 0 10px 0;
+  max-height: 410px;
+  overflow: auto;
 }
 
 .titleChatEmotaku {
   padding: 20px 0 20px 0;
+}
+
+.mainSendMessage {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 36px;
+  margin-bottom: 10px;
+  border: 2px solid white;
+}
+
+.messageToSend {
+  flex-grow: 3;
+  /* El input ocupa más espacio (2 veces más) */
+  height: 100%;
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #383838;
+  font-family: MS Gothic, monospace;
+}
+
+#messageToSend {
+  width: 100%;
+  background-color: black;
+  color: white;
+  height: 100%;
+  padding-left: 10px;
+  font-size: 18px;
+}
+
+.sendMessageButton {
+  flex-grow: 0.5;
+  /* El botón ocupa menos espacio (1 vez) */
+  width: auto;
+  /* Anchura automática para ajustarse al contenido */
+  background-color: rgb(0, 0, 0);
+  color: white;
 }
 
 .chatEmotaku {
@@ -115,6 +188,5 @@ export default defineComponent({
 
 .khe {
   background-color: red;
-}
-</style>
+}</style>
   
