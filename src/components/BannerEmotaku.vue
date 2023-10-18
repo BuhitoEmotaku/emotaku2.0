@@ -21,13 +21,13 @@
   
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-
+import audioPika from '@/assets/music/pikachuSound.mp3';
 export default defineComponent({
   name: 'BannerEmotaku',
   setup(){
 
     const hasMouseMoved = ref(false);
-    const audioPikachu = new Audio('../src/assets/music/pikachuSound.mp3');
+    const audioPikachu = new Audio(audioPika);
     audioPikachu.volume = 0.19;
     const audioEnabled = ref(false);
 

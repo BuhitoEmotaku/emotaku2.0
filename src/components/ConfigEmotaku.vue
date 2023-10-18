@@ -17,12 +17,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ref, onMounted, watch } from 'vue';
-
+import audioLluvia from '@/assets/music/lluvia.mp3';
 export default defineComponent({
   name: 'ConfigEmotaku',
   setup() {
     const hasMouseMoved = ref(false);
-    const audioRain = new Audio('../src/assets/music/lluvia.mp3');
+    const audioRain = new Audio(audioLluvia) as HTMLAudioElement;
     audioRain.volume = 0.03;
     audioRain.loop = true;
     const audioEnabled = ref(false);

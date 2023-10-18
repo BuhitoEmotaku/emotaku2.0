@@ -203,7 +203,7 @@ aside {
 .mainChatEmotaku {
   width: 100%;
   padding: 20px 20px 30px 20px;
-  max-height: 529px;
+  max-height: 576px;
   overflow: hidden;
   border-radius: 5px;
 }

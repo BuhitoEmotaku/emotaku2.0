@@ -1,5 +1,7 @@
 <template>
   <h1 class="titleChatEmotaku">CHAT EMOTAKU</h1>
+  <div class="contentNumActiveUsers"><span class="activeUsersText">Usuarios activos</span>:<span class="numActiveUsers">&nbsp;{{ numOnlineUsers }}</span></div>
+  <br>
   <div class="mainSendMessage">
     <div class="messageToSend">
       <label for="messageToSend">
@@ -43,7 +45,7 @@ export default defineComponent({
   name: 'ChatEmotaku',
   setup() {
     const messageCreated = ref('')
-    const { messages, sendMessage } = useChat();
+    const { messages, numOnlineUsers, sendMessage, addUserToOnlineList, getOnlineUsersCount } = useChat();
     const message = ref('');
     const bottom: Ref<HTMLElement | null> = ref(null);
 
@@ -79,11 +81,13 @@ export default defineComponent({
 
     onMounted(() => {
       document.addEventListener("visibilitychange", handleVisibilityChange);
-
+      addUserToOnlineList();
+      getOnlineUsersCount();
       // Asegúrate de eliminar el evento cuando el componente se desmonta
       onBeforeUnmount(() => {
         document.removeEventListener("visibilitychange", handleVisibilityChange);
       });
+
     });
 
     watch(
@@ -100,9 +104,11 @@ export default defineComponent({
         deep: true
       }
     )
+    
 
-    return { message, messages, messageCreated, sendNewMessage, time24Hours };
+    return { message, messages, messageCreated, numOnlineUsers, sendNewMessage, time24Hours };
   }
+
 });
 </script>
   
@@ -110,15 +116,30 @@ export default defineComponent({
 <style scoped>
 .chatEmotakuStyler {
   border: 2px solid white;
-  padding: 0 0 10px 0;
+  padding: 10px 0 10px 0;
   max-height: 410px;
   overflow: auto;
 }
 
 .titleChatEmotaku {
-  padding: 20px 0 20px 0;
+  padding: 10px 0 25px 0;
+
 }
 
+.contentNumActiveUsers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.activeUsersText{
+
+  color:green;
+}
+
+.numActiveUsers {
+  color: red;
+  font-size: 20px;
+}
 .mainSendMessage {
   display: flex;
   justify-content: space-between;
@@ -188,5 +209,6 @@ export default defineComponent({
 
 .khe {
   background-color: red;
-}</style>
+}
+</style>
   
