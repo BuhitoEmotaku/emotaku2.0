@@ -9,7 +9,7 @@ const router = createRouter({
   {
     path: '/',
     name: 'home',
-    component: HomeEmotaku
+    component: TestingEverything
   },
   {
     path: '/about',
@@ -28,6 +28,11 @@ const router = createRouter({
     path: '/tricksBoy',
     name: 'tricksBoy',
     component: TricksBoy
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'notFound',
+    component: TestingEverything // Reemplaza 'NotFoundComponent' con el componente que desees mostrar
   }
 ]
 })
