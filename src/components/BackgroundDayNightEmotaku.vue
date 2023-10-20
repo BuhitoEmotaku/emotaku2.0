@@ -16,7 +16,7 @@ export default defineComponent({
 
     // Calcula la clase de fondo en función de la hora actual
     const backgroundClass = computed(() => {
-      if (currentTime.value >= 6 && currentTime.value < 10) {
+      if (currentTime.value >= 6 && currentTime.value < 20) {
         return 'backgroundImgDay';
       } else {
         return 'backgroundImgNight';
