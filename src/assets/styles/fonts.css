@@ -31,4 +31,7 @@
     font-family: "Tetsuya";
     src: url("../fonts/TetsuyaDemoRegular.ttf") format("truetype");
 }
-
+@font-face {
+    font-family: "Pixel Titles";
+    src: url("../fonts/Crang.ttf") format("truetype");
+}
