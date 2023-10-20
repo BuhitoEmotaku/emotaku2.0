@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import type { Ref } from 'vue';
 
 import { onUnmounted } from 'vue';
-import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where, Timestamp } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where, Timestamp, limit } from "firebase/firestore";
 import { onValue, ref as rtdbRef, getDatabase, set as rtdbSet, onDisconnect, query as rtdbQuery, child as rtdbChild, get as rtdbGet, DataSnapshot } from 'firebase/database';
 
 
@@ -48,10 +48,18 @@ const twentyFourHoursAgo = new Date();
 twentyFourHoursAgo.setTime(twentyFourHoursAgo.getTime() - 24 * 60 * 60 * 1000); // Resta 24 horas en milisegundos
 
 const messagesCollection = collection(firestore, 'messages');
+/*
 const messagesQuery = query(
   messagesCollection,
   orderBy('createdAt', 'desc'), // Ordena por createdAt en orden descendente
   where('createdAt', '>', Timestamp.fromDate(twentyFourHoursAgo)) // Filtra por mensajes creados en las últimas 24 horas
+);
+*/
+
+const messagesQuery = query(
+  messagesCollection,
+  orderBy('createdAt', 'desc'), // Ordena por createdAt en orden descendente
+  limit(100) // Limita el resultado a los últimos 100 mensajes
 );
 
 export function useChat() {

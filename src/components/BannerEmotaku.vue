@@ -1,13 +1,16 @@
 <template>
   <header>
-    <span class="emoTitle">EMO</span><span class="takuTitle">TAKU</span>
+    <div class="emotakuTitle">
+      <span class="emoTitle">EMO</span><span class="takuTitle">TAKU</span>
+    </div>
+
     <div id="emotakuGirl">
       <img @click="playPauseAudio" src="../assets/images/characters/pikachu.png" alt="" class="pikachuCharacter">
+      <!--
       <div class="backgroundWrapper">
-        <!-- Aquí puedes poner tu imagen de fondo -->
         <img src="../assets/♡.jpg" alt="Background Image">
       </div>
-
+      -->
       <div class="imgInsideGirl">
         <div class="imgBanner">
         </div>
@@ -20,11 +23,22 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
 import audioPika from '@/assets/music/pikachuSound.mp3';
 export default defineComponent({
   name: 'BannerEmotaku',
-  setup(){
+  setup() {
+
+
+    let isImage1 = true;
+    let intervalId: any;
+
+    onMounted(() => {
+    });
+
+    onBeforeUnmount(() => {
+      clearInterval(intervalId); // Limpia el intervalo al desmontar el componente
+    });
 
     const hasMouseMoved = ref(false);
     const audioPikachu = new Audio(audioPika);
@@ -48,7 +62,7 @@ export default defineComponent({
 
   overflow: visible;
   width: 100%;
-  height: 231px;
+  height: 160px;
   background-color: transparent;
   box-sizing: border-box;
   position: relative;
@@ -58,8 +72,9 @@ export default defineComponent({
 }
 
 span {
-  font-family: Tetsuya;
-  font-size: 122px;
+  /* font-family: Tetsuya; */
+  font-family: Pixel Titles;
+  font-size: 100px;
   text-align: center;
   color: rgba(242, 188, 247, 0.91);
   text-shadow: 0 0 80px #4a0086, 0 0 10px #4a0086, 0 0 15px #4a0086, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
@@ -69,6 +84,7 @@ span {
   animation: glow 4.76s ease-in-out infinite alternate, parpadeo .07s infinite;
   z-index: 10;
   position: relative;
+  font-size: 130px;
 }
 
 .takuTitle {
@@ -112,7 +128,7 @@ span {
 
   width: 100%;
   /* Ajusta el ancho según tus necesidades */
-  height: 231px;
+  height: 165px;
   /* Ajusta la altura según tus necesidades */
   box-sizing: border-box;
   position: absolute;
@@ -121,6 +137,7 @@ span {
 
 .imgInsideGirl {
   overflow: hidden;
+  background-color: #000000d4;
 }
 
 .imgBanner {
@@ -149,7 +166,7 @@ span {
   position: absolute;
   background-image: url('../assets/blueemotakuHands.png');
   background-size: cover;
-  background-position: 0 -210px;
+  background-position: 0 -276px;
   right: 0;
 
 }
@@ -165,7 +182,8 @@ span {
   cursor: pointer;
   filter: hue-rotate(331.2deg);
 }
-.pikachuCharacter:hover{
+
+.pikachuCharacter:hover {
   filter: hue-rotate(190deg);
   transform: rotate(0deg);
 }
@@ -200,19 +218,38 @@ span {
     margin: 0 auto;
   }
 
-  
+
 }
+
 @media (max-width: 650px) {
   span {
     font-size: 100px;
   }
+  .emoTitle {
+    font-size: 110px;
+  }
+}
+@media (max-width: 582px) {
+  span {
+    font-size: 85px;
+  }
+  .emotakuTitle {
+    margin: 30px 0 30px 0;
+  }
+  .emoTitle {
+    font-size: 95px;
+  }
+  
 }
 
 @media (max-width: 476px) {
   span {
+    font-size: 60px;
+  }
+  .emoTitle {
     font-size: 70px;
   }
-  
+
 }
 </style>
   

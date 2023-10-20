@@ -28,11 +28,8 @@ export default defineComponent({
         });
       }
 
-      
-
     onMounted(() => {
       fpsMeter();
-
     });
 
     return { fpsEmotaku };
@@ -57,8 +54,6 @@ export default defineComponent({
     background-color:  #a8009d;
 
   }
-
- 
 }
 </style>
   

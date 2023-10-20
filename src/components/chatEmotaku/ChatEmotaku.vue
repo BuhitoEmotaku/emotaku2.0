@@ -5,14 +5,13 @@
   <div class="mainSendMessage">
     <div class="messageToSend">
       <label for="messageToSend">
-        <input type="text" id="messageToSend" v-model="messageCreated"
+        <input type="text" id="messageToSend" v-model="messageCreated" @keyup.enter="sendNewMessage(messageCreated)"
           placeholder="Bienvenido al chat! -- Se respetuoso y amable <3 ^^*" autocomplete="off" maxlength="300" required>
       </label>
     </div>
 
     <button class="sendMessageButton" @click="sendNewMessage(messageCreated)">Enviar</button>
   </div>
-
 
   <div class="chatEmotakuStyler">
     <div class="messagesContainer">
@@ -33,14 +32,8 @@
 import { defineComponent, nextTick, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import type { Ref } from 'vue';
 import { useChat } from '@/assets/scripts/firebase';
-
-interface Message {
-  id: string;
-  userName: string;
-  text: string;
-  // Agrega otras propiedades aquí si es necesario
-}
-
+import audioNewMessage from '@/assets/music/newMessageSound.mp3';
+import { useCounterStore } from '@/stores/userOutOfPage';
 export default defineComponent({
   name: 'ChatEmotaku',
   setup() {
@@ -54,8 +47,8 @@ export default defineComponent({
         sendMessage(text, ''); // Puedes pasar el nombre de usuario aquí
         messageCreated.value = '';
       }
-
     };
+
 
     const time24Hours = (timestamp: number) => {
       const fecha = new Date(timestamp * 1000); // Multiplica por 1000 para convertir a milisegundos
@@ -65,36 +58,39 @@ export default defineComponent({
       return `${horas}:${minutos}:${segundos}`;
     }
 
-    const checkerOnWeb = ref(true);
+    const checkerNewMessages = ref(false);
+    const cofigVariablesWebStore = useCounterStore()
+    const checkerOnWebStore = cofigVariablesWebStore.handleVisibilityChange;
 
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        checkerOnWeb.value = false;
-        // La página está oculta, el usuario cambió de pestaña o aplicación
-        // Puedes detener el sonido aquí o realizar cualquier otra acción.
-      } else {
-        checkerOnWeb.value = true;
-        // La página está enfocada, el usuario volvió a ella
-        // Puedes iniciar el sonido o realizar cualquier otra acción.
-      }
-    };
-
+    const audioMessage = new Audio(audioNewMessage) as HTMLAudioElement;
+    audioMessage.volume = 0.03;
     onMounted(() => {
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-      addUserToOnlineList();
+        addUserToOnlineList();
       getOnlineUsersCount();
-      // Asegúrate de eliminar el evento cuando el componente se desmonta
-      onBeforeUnmount(() => {
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
-      });
+
+      setInterval(() => {
+        if(cofigVariablesWebStore.checkerOnWeb && checkerNewMessages.value && cofigVariablesWebStore.clickedConfig){
+          audioMessage.play();
+          console.log('asdfsdf');
+          checkerNewMessages.value = false;
+        }else {
+          checkerNewMessages.value = false;
+        }
+      },300000);
+
+      document.addEventListener("visibilitychange", checkerOnWebStore);
 
     });
+
+    onBeforeUnmount(() => {
+      document.removeEventListener("visibilitychange", checkerOnWebStore);
+    });
+
 
     watch(
       messages,
       () => {
-        if (checkerOnWeb.value != true)
-          console.log('try');
+        checkerNewMessages.value = true;
         nextTick(() => {
           bottom.value?.scrollIntoView({ behavior: 'smooth' });
         })
@@ -175,6 +171,11 @@ export default defineComponent({
   /* Anchura automática para ajustarse al contenido */
   background-color: rgb(0, 0, 0);
   color: white;
+  cursor:pointer;
+}
+.sendMessageButton:hover {
+  background-color: rgb(32, 32, 32);
+  
 }
 
 .chatEmotaku {

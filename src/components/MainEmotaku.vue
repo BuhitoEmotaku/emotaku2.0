@@ -16,84 +16,25 @@
             <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
             <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
           </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
         </aside>
         <aside class="mainCenter">
           <marquee class="welcomeMessage" behavior="scroll" direction="left">Bienvenid@ a 🖤Emotaku🤍 pequeña ratita
           </marquee>
           <div id="viewSelected">
             <router-view />
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
-            V
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
-            <h1>HEEEEEEEE</h1>
           </div>
 
         </aside>
         <aside class="mainRight">
-          <ConfigEmotaku></ConfigEmotaku>
+          <aside class="configAside">
+            <ConfigEmotaku></ConfigEmotaku>
+          </aside>
+
+          <aside class="configAside" id="spriteGameContainer">
+            <SpriteMovingGame></SpriteMovingGame>
+          </aside>
+          
+          
         </aside>
 
       </aside>
@@ -109,12 +50,15 @@ import { defineComponent } from 'vue';
 import ConfigEmotaku from '@/components/ConfigEmotaku.vue';
 import FpsEmotaku from '@/components/FpsEmotaku.vue';
 import ChatEmotaku from '@/components/chatEmotaku/ChatEmotaku.vue';
+import SpriteMovingGame from '@/components/miniApps/SpriteMovingGame.vue';
+
 export default defineComponent({
   name: 'MainEmotaku',
   components: {
     ConfigEmotaku,
     FpsEmotaku,
-    ChatEmotaku
+    ChatEmotaku,
+    SpriteMovingGame
   }
 });
 </script>
@@ -131,13 +75,14 @@ aside {
   display: flex;
   flex-direction: column;
   gap: 15.5px;
+  margin-top: 4px;
 }
 
 .mainLeft,
 .mainRight,
 .mainCenter {
   overflow: auto;
-  max-height: 800px;
+  max-height: 772px;
   border-radius: 10px;
 }
 
@@ -149,6 +94,7 @@ aside {
   gap: 22.5px;
   border-radius: 5px;
   overflow: hidden;
+  min-height: 772px;
 }
 
 .mainLeft {
@@ -156,6 +102,9 @@ aside {
 }
 
 .mainRight {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   width: 24%;
   padding: 12px;
 }
@@ -165,6 +114,9 @@ aside {
   padding: 20px;
 }
 
+#viewSelected {
+  margin-top: 10px;
+}
 .mainTopInfo {
   display: flex;
   flex-wrap: wrap;
@@ -203,7 +155,7 @@ aside {
 .mainChatEmotaku {
   width: 100%;
   padding: 20px 20px 30px 20px;
-  max-height: 576px;
+  max-height: auto;
   overflow: hidden;
   border-radius: 5px;
 }
@@ -211,6 +163,17 @@ aside {
 .welcomeMessage {
   border: 2px solid white;
 }
+
+.configAside {
+  overflow: auto;
+  max-height: 300px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+
+
+
 
 @media (max-width: 1110px) {
 
