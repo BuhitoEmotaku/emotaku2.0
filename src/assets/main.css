@@ -2,14 +2,16 @@
 
 #app {
   text-align: center;
-  max-width: 1100px;
+  max-width: 1200px;
   max-height: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 13px;
 }
-
+h1, h2, h3, h4, h5, h6{
+  font-family: Pixel Titles;
+}
 .imgInsideGirlHands, .mainContent, aside {
   outline: var(--outlineContent);
 }
