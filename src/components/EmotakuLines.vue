@@ -7,9 +7,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'EmotakuLines',
-  props: {
-    msg: String,
-  },
+  
 });
 </script>
   

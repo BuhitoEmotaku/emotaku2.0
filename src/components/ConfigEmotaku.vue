@@ -45,14 +45,14 @@ import { useCounterStore } from '@/stores/userOutOfPage';
 export default defineComponent({
   name: 'ConfigEmotaku',
   setup() {
-    const hasMouseMoved = ref(false);
+    
+
+    //AUDIO LLUVIA CONFIG, PLAY AND PAUSE
     const audioRain = new Audio(audioLluvia) as HTMLAudioElement;
     audioRain.volume = 0.03;
     audioRain.loop = true;
     const audioEnabled = ref(false);
-
-
-    const counterStore = useCounterStore()
+    const counterStore = useCounterStore(); 
 
     const playPauseAudio = () => {
       if (audioEnabled.value) {
@@ -64,14 +64,13 @@ export default defineComponent({
     };
 
     const toggleAudio = () => {
-      audioEnabled.value = audioEnabled.value;
-      // Guarda el estado en localStorage
       localStorage.setItem('audioEnabled', `${audioEnabled.value}`);
       playPauseAudio();
     };
 
 
     // Función para manejar el evento de movimiento del mouse
+    const hasMouseMoved = ref(false);
     const handleAudioMove = () => {
       if (!hasMouseMoved.value) {
         playPauseAudio();

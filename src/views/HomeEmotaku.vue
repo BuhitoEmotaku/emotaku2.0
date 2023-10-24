@@ -1,5 +1,5 @@
 <template>
-  
+  <h1>Bienvenido a Emotaku!</h1>
 </template>
   
 <script lang="ts">

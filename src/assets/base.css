@@ -37,7 +37,9 @@
 
   --section-gap: 160px;
 
-  --outlineContent: 4px solid #34f2ff;
+  --outlineContent: 3px solid #c828a7;
+  /*4px solid #34f2ff;*/
+  
 }
 
 [theme="dark"] {
@@ -71,7 +73,7 @@
   margin: 0;
   padding: 0;
   font-weight: normal;
-  scrollbar-color: rgb(215, 255, 36) rgb(255, 255, 255);
+  scrollbar-color: rgb(45, 45, 45) rgb(255, 255, 255);
   scrollbar-width: thin;
 }
 

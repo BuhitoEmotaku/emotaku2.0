@@ -29,17 +29,6 @@ export default defineComponent({
   name: 'BannerEmotaku',
   setup() {
 
-
-    let isImage1 = true;
-    let intervalId: any;
-
-    onMounted(() => {
-    });
-
-    onBeforeUnmount(() => {
-      clearInterval(intervalId); // Limpia el intervalo al desmontar el componente
-    });
-
     const hasMouseMoved = ref(false);
     const audioPikachu = new Audio(audioPika);
     audioPikachu.volume = 0.19;
@@ -77,7 +66,7 @@ span {
   font-size: 100px;
   text-align: center;
   color: rgba(242, 188, 247, 0.91);
-  text-shadow: 0 0 80px #4a0086, 0 0 10px #4a0086, 0 0 15px #4a0086, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
+  text-shadow: 0 0 80px #000000, 0 0 10px #000000, 0 0 15px #000000, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
 }
 
 .emoTitle {
@@ -94,15 +83,15 @@ span {
 
 @keyframes glow {
   from {
-    text-shadow: 0 0 80px #4a0086, 0 0 10px #4a0086, 0 0 15px #4a0086, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
+    text-shadow: 0 0 80px #000000, 0 0 10px #000000, 0 0 15px #000000, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
     /*text-shadow: 0 0 80px #000000, 0 0 10px #000000, 0 0 15px #000000, 0 0 20px #000000, 0 0 25px #000000, 0 0 30px #000000, 0 0 35px #000000;*/
 
   }
 
   to {
     /*text-shadow: 0 0 80px #fff, 0 0 20px #fff, 0 0 30px #d341ff, 0 0 40px #d341ff, 0 0 50px #d341ff, 0 0 60px #d341ff, 0 0 70px #d341ff;*/
-    text-shadow: 0 0 80px #cecece, 0 0 10px #cecece, 0 0 15px #cecece, 0 0 20px #cecece, 0 0 25px #cecece, 0 0 30px #cecece, 0 0 35px #cecece;
-    color: rgba(0, 0, 0, 0.91);
+    text-shadow: 0 0 80px #610085, 0 0 10px #610085, 0 0 15px #610085, 0 0 20px #cecece, 0 0 25px #cecece, 0 0 30px #cecece, 0 0 35px #cecece;
+    color: rgba(20, 20, 20, 0.854);
   }
 }
 
@@ -133,11 +122,13 @@ span {
   box-sizing: border-box;
   position: absolute;
   z-index: 999;
+  border-radius: 10px;
 }
 
 .imgInsideGirl {
   overflow: hidden;
   background-color: #000000d4;
+  
 }
 
 .imgBanner {
@@ -152,6 +143,7 @@ span {
   background-position: 0 -210px;
   float: right;
   margin-right: -50px;
+  
 
 }
 
@@ -168,6 +160,7 @@ span {
   background-size: cover;
   background-position: 0 -276px;
   right: 0;
+  
 
 }
 
@@ -186,30 +179,6 @@ span {
 .pikachuCharacter:hover {
   filter: hue-rotate(190deg);
   transform: rotate(0deg);
-}
-
-
-@keyframes parpadeo {
-  0% {
-    opacity: 0.99;
-  }
-
-  25% {
-    opacity: 0.90;
-  }
-
-  50% {
-    opacity: 0.99;
-  }
-
-  75% {
-    opacity: 0.9;
-  }
-
-  100% {
-    opacity: 1;
-  }
-
 }
 
 @media (max-width: 1110px) {

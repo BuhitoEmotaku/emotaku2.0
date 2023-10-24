@@ -1,31 +1,32 @@
 <template>
-  <h1 class="titleSpriteGame">Click en el bosque y pulsa tus flechas para moverte!</h1>
+  <h1 class="titleSpriteGame">Click en la ciudad y pulsa tus flechas para moverte!</h1>
   <div id="gamePokemonSprites" @click="startGame">
-    <div id="sprite" :style="spriteStyle" @click="playHoOhSoundSprite"></div>
+    <div id="sprite" :style="spriteStyle" @click="playHoOhSoundSprite">
+      <img :src="spriteChosen" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
-import hoOhWalkingLeft from '@/assets/images/sprites/ho-Oh/o-l_hs_250_1.png';
-import hoOhWalkingRight from '@/assets/images/sprites/ho-Oh/o-r_hs_250_1.png';
-import hoOhWalkingTop from '@/assets/images/sprites/ho-Oh/o-b_hs_250_1.png';
-import hoOhWalkingBottom from '@/assets/images/sprites/ho-Oh/o_hs_250_1.png';
-import HoOHsound from '@/assets/images/sprites/ho-Oh/250 Ho-Oh.mp3';
-import hoOhWalkingLeft2 from '@/assets/images/sprites/ho-Oh/o-l_hs_250_2.png';
-import hoOhWalkingRight2 from '@/assets/images/sprites/ho-Oh/o-r_hs_250_2.png';
-import hoOhWalkingTop2 from '@/assets/images/sprites/ho-Oh/o-b_hs_250_2.png';
-import hoOhWalkingBottom2 from '@/assets/images/sprites/ho-Oh/o_hs_250_2.png';
-
+import HoOHsound from '@/assets/images/sprites/Ho-Oh/250 Ho-Oh.mp3';
+import useAssets from '@/assets/scripts/composable';
 export default defineComponent({
   name: 'SpriteMovingGame',
   setup() {
+    
     const spriteX = ref(0);
     const spriteY = ref(0);
     const containerHeight = 270; // Alto del contenedor
     const borderGameSprites = ref('2px solid white');
-    const arraySpriteOrden = ref([hoOhWalkingTop, hoOhWalkingRight, hoOhWalkingBottom, hoOhWalkingLeft]);
-    const spriteChosen = ref(`url('${hoOhWalkingRight}')`)
+    const arraySpriteOrden = ref([
+    useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png'),
+    useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png'),
+    useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png'),
+    useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png')
+    ]);
+
+    const spriteChosen = ref(useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png'));
     const spriteStyle = ref({
       left: `${spriteX.value}px`,
       top: `${spriteY.value}px`,
@@ -55,7 +56,6 @@ export default defineComponent({
     };
 
     const startGame = () => {
-      window.scrollTo({ left: 0, top: document.getElementById('gamePokemonSprites')?.scrollHeight, behavior: "smooth" });
       document.getElementById('spriteGameContainer')?.scrollTo({ left: 0, top: document.getElementById('spriteGameContainer')?.scrollHeight, behavior: "smooth" });
       gameActive = true;
       borderGameSprites.value = '2px solid red';
@@ -85,25 +85,41 @@ export default defineComponent({
           case 'ArrowUp':
             moveSprite(0, -step); // Mover hacia arriba
             event.preventDefault(); // Previene el desplazamiento vertical
-            spriteChosen.value = `url('${arraySpriteOrden.value[0]}')`;
-            arraySpriteOrden.value[0] = arraySpriteOrden.value[0] === hoOhWalkingTop ? hoOhWalkingTop2 : hoOhWalkingTop;
+            spriteChosen.value = useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png');
+            spriteChosen.value =
+              arraySpriteOrden.value[0] = arraySpriteOrden.value[0] ===
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png') ?
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_2.png') : 
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png');
             break;
           case 'ArrowDown':
             moveSprite(0, step); // Mover hacia abajo
             event.preventDefault(); // Previene el desplazamiento vertical
-            spriteChosen.value = `url('${arraySpriteOrden.value[2]}')`;
-            arraySpriteOrden.value[2] = arraySpriteOrden.value[2] === hoOhWalkingBottom ? hoOhWalkingBottom2 : hoOhWalkingBottom;
+            spriteChosen.value = useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png');
+            spriteChosen.value =
+              arraySpriteOrden.value[2] = arraySpriteOrden.value[2] ===
+              useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png') ?
+              useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_2.png') : 
+              useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png');
             break;
           case 'ArrowLeft':
             moveSprite(-step, 0); // Mover hacia la izquierda
-            spriteChosen.value = `url('${arraySpriteOrden.value[3]}')`;
-            arraySpriteOrden.value[3] = arraySpriteOrden.value[3] === hoOhWalkingLeft ? hoOhWalkingLeft2 : hoOhWalkingLeft;
+            spriteChosen.value = useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png');
+            spriteChosen.value =
+              arraySpriteOrden.value[3] = arraySpriteOrden.value[3] ===
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png') ? 
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_2.png') : 
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png');
             break;
           case 'ArrowRight':
             moveSprite(step, 0); // Mover hacia la derecha
             event.preventDefault(); // Previene el desplazamiento horizontal
-            spriteChosen.value = `url('${arraySpriteOrden.value[1]}')`;
-            arraySpriteOrden.value[1] = arraySpriteOrden.value[1] === hoOhWalkingRight ? hoOhWalkingRight2 : hoOhWalkingRight;
+            spriteChosen.value = useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png');
+            spriteChosen.value =
+              arraySpriteOrden.value[1] = arraySpriteOrden.value[1] ===
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png') ? 
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_2.png') : 
+              useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png');
             break;
         }
       }
@@ -123,9 +139,9 @@ export default defineComponent({
 
 
     return {
-      spriteChosen,
       borderGameSprites,
       spriteStyle,
+      spriteChosen,
       startGame,
       playHoOhSoundSprite
     };
@@ -139,8 +155,10 @@ export default defineComponent({
   width: 100%;
   height: 270px;
   outline: v-bind(borderGameSprites);
-  background-image: url('../../assets/images/sprites/spriteForestPokemon.jpg');
+  background-image: url('../../assets/images/sprites/backgroundPokemonSprites.gif');
+  background-size: cover;
   /* Para que el contenedor pueda recibir eventos de teclado */
+  border-radius: 14px;
 }
 
 .titleSpriteGame {
@@ -151,12 +169,14 @@ export default defineComponent({
   position: absolute;
   width: 56px;
   height: 64px;
-  background-image: v-bind(spriteChosen);
-  /* Cambia el color de fondo según tus necesidades */
-  transition: transform 0.3s;
 }
+
+
 #sprite:hover {
   cursor: pointer;
-  filter: hue-rotate(30deg);
+  filter: hue-rotate(10deg);
+  transform: scale(1.2);
+  image-rendering: crisp-edges;
 }
+
 </style>

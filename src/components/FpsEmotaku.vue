@@ -8,8 +8,9 @@ import { ref, onMounted} from 'vue';
 export default defineComponent({
   name: 'FpsEmotaku',
   setup() {
-    const fpsEmotaku = ref();
 
+    //FUNCTION TO CALCULATE FPS SCREEN
+    const fpsEmotaku = ref();
     const fpsMeter = () => {
         let prevTime = Date.now(),
           frames = 0;
@@ -28,6 +29,7 @@ export default defineComponent({
         });
       }
 
+    //ON-MOUNTED
     onMounted(() => {
       fpsMeter();
     });

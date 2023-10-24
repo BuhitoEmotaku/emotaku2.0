@@ -1,12 +1,14 @@
 <template>
   <h1 class="titleChatEmotaku">CHAT EMOTAKU</h1>
-  <div class="contentNumActiveUsers"><span class="activeUsersText">Usuarios activos</span>:<span class="numActiveUsers">&nbsp;{{ numOnlineUsers }}</span></div>
+  <div class="contentNumActiveUsers"><span class="activeUsersText">Usuarios activos</span>:<span
+      class="numActiveUsers">&nbsp;{{ numOnlineUsers }}</span></div>
   <br>
   <div class="mainSendMessage">
     <div class="messageToSend">
       <label for="messageToSend">
         <input type="text" id="messageToSend" v-model="messageCreated" @keyup.enter="sendNewMessage(messageCreated)"
-          placeholder="Bienvenido al chat! -- Se respetuoso y amable <3 ^^*" autocomplete="off" maxlength="300" required>
+          placeholder="Bienvenido al chat! -- Se respetuoso y amable ✧✿◕‿◕✿ <3" autocomplete="off" maxlength="300"
+          required>
       </label>
     </div>
 
@@ -17,9 +19,9 @@
     <div class="messagesContainer">
       <div class="khe" ref="bottom" />
       <div class="chatEmotaku" v-for="message in messages" :key="message.id">
-        <span class="chatUser">&lt{{ message.userName }}></span>
+        <span class="chatUser">{{ message.userName }}></span>
         <div class="messageData">
-          <span class="chatMessage">-> {{ message.message }}</span>
+          <span class="chatMessage"><b v-if="!message.onlyImage">▶</b> <span class="chatMessageContent" v-html="message.message"></span></span>
           <span class="chatTimeMessage">{{ message.createdAt ? time24Hours(message.createdAt.seconds) : '' }}</span>
         </div>
       </div>
@@ -37,11 +39,12 @@ import { useCounterStore } from '@/stores/userOutOfPage';
 export default defineComponent({
   name: 'ChatEmotaku',
   setup() {
-    const messageCreated = ref('')
-    const { messages, numOnlineUsers, sendMessage, addUserToOnlineList, getOnlineUsersCount } = useChat();
-    const message = ref('');
-    const bottom: Ref<HTMLElement | null> = ref(null);
 
+    const { messages, numOnlineUsers, sendMessage, addUserToOnlineList, getOnlineUsersCount } = useChat();
+
+
+    //SEND MESSAGE METHOD
+    const messageCreated = ref('');
     const sendNewMessage = (text: string) => {
       if (text != '') {
         sendMessage(text, ''); // Puedes pasar el nombre de usuario aquí
@@ -49,7 +52,7 @@ export default defineComponent({
       }
     };
 
-
+    //CONVERTER TIME TO 24H
     const time24Hours = (timestamp: number) => {
       const fecha = new Date(timestamp * 1000); // Multiplica por 1000 para convertir a milisegundos
       const horas = fecha.getHours().toString().padStart(2, '0'); // Asegura que las horas tengan dos dígitos
@@ -58,35 +61,39 @@ export default defineComponent({
       return `${horas}:${minutos}:${segundos}`;
     }
 
-    const checkerNewMessages = ref(false);
-    const cofigVariablesWebStore = useCounterStore()
-    const checkerOnWebStore = cofigVariablesWebStore.handleVisibilityChange;
 
+    //CHECK USER DISCONNECT FAKE ARREGLAR CON VISIBILITY EN VEZ DE TIMEOUT
+    const cofigVariablesWebStore = useCounterStore();
+
+
+    //ON MOUNTED //ACTIVATE AUDIO MESSAGE IF OUT_PAGE AND NEW MESSAGE
     const audioMessage = new Audio(audioNewMessage) as HTMLAudioElement;
     audioMessage.volume = 0.03;
+    const checkerNewMessages = ref(false);
     onMounted(() => {
-        addUserToOnlineList();
-      getOnlineUsersCount();
+      //document.addEventListener("visibilitychange", reconectUserWhenIsOnPage);
 
       setInterval(() => {
-        if(cofigVariablesWebStore.checkerOnWeb && checkerNewMessages.value && cofigVariablesWebStore.clickedConfig){
+        if (cofigVariablesWebStore.checkerOnWeb && checkerNewMessages.value && cofigVariablesWebStore.clickedConfig) {
           audioMessage.play();
-          console.log('asdfsdf');
           checkerNewMessages.value = false;
-        }else {
+        } else {
           checkerNewMessages.value = false;
         }
-      },300000);
+      }, 300000);
 
-      document.addEventListener("visibilitychange", checkerOnWebStore);
-
+      
     });
 
+
+    //BEFORE MOUNTED
     onBeforeUnmount(() => {
-      document.removeEventListener("visibilitychange", checkerOnWebStore);
+      
     });
 
 
+    //WATCH
+    const bottom: Ref<HTMLElement | null> = ref(null);
     watch(
       messages,
       () => {
@@ -95,14 +102,23 @@ export default defineComponent({
           bottom.value?.scrollIntoView({ behavior: 'smooth' });
         })
 
-      },
-      {
-        deep: true
+      }, { deep: true }
+    );
+/*
+    watch(
+      () => cofigVariablesWebStore.checkerOnWeb, // Devuelve la propiedad que deseas observar
+      (newValue) => {
+        if (newValue === false) {
+          // La variable `checkerOnWeb` ha cambiado de true a false
+          // Ejecuta el código necesario aquí
+          addUserToOnlineList();
+          getOnlineUsersCount();
+          console.log(numOnlineUsers.value);
+        }
       }
-    )
-    
-
-    return { message, messages, messageCreated, numOnlineUsers, sendNewMessage, time24Hours };
+    );
+    */
+    return { messages, messageCreated, numOnlineUsers, sendNewMessage, time24Hours };
   }
 
 });
@@ -119,7 +135,6 @@ export default defineComponent({
 
 .titleChatEmotaku {
   padding: 10px 0 25px 0;
-
 }
 
 .contentNumActiveUsers {
@@ -127,15 +142,17 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
 }
-.activeUsersText{
 
-  color:green;
+.activeUsersText {
+
+  color: green;
 }
 
 .numActiveUsers {
   color: red;
   font-size: 20px;
 }
+
 .mainSendMessage {
   display: flex;
   justify-content: space-between;
@@ -155,6 +172,7 @@ export default defineComponent({
   font-family: MS Gothic, monospace;
 }
 
+
 #messageToSend {
   width: 100%;
   background-color: black;
@@ -171,11 +189,12 @@ export default defineComponent({
   /* Anchura automática para ajustarse al contenido */
   background-color: rgb(0, 0, 0);
   color: white;
-  cursor:pointer;
+  cursor: pointer;
 }
+
 .sendMessageButton:hover {
   background-color: rgb(32, 32, 32);
-  
+
 }
 
 .chatEmotaku {
@@ -194,7 +213,7 @@ export default defineComponent({
   color: green;
 }
 
-.chatMessage {
+.chatMessage, .chatMessageContent {
   word-break: break-word;
   padding: 5px 0 0 6px;
 }

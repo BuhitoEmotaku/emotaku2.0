@@ -4,19 +4,23 @@
     <div class="allContent">
       <aside class="mainContent">
         <aside class="mainLeft">
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
-          <nav class="principalViews">
-            <router-link to="/">Home</router-link>
-            <router-link to="/about">About</router-link>
-            <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
-            <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
-          </nav>
+          <aside class="routesEmotaku">
+            <nav class="principalViews">
+              <router-link to="/">INICIO</router-link>
+              <router-link to="/about">Buhito(CREADOR)</router-link>
+              <router-link :to="{ name: 'testingEverything' }">TestingZone</router-link>
+              <router-link :to="{ name: 'tricksBoy' }">TricksBoy</router-link>
+
+            </nav>
+          </aside>
+          <aside class="statsEmotaku">
+            <StatsEmotaku></StatsEmotaku>
+          </aside>
+          
         </aside>
+
+
+
         <aside class="mainCenter">
           <marquee class="welcomeMessage" behavior="scroll" direction="left">Bienvenid@ a 🖤Emotaku🤍 pequeña ratita
           </marquee>
@@ -33,11 +37,16 @@
           <aside class="configAside" id="spriteGameContainer">
             <SpriteMovingGame></SpriteMovingGame>
           </aside>
-          
-          
+
+
         </aside>
 
       </aside>
+
+      <aside class="stickersSlidingChat">
+        <StickersSliding></StickersSliding>
+      </aside>
+
       <aside class="mainChatEmotaku">
         <ChatEmotaku></ChatEmotaku>
       </aside>
@@ -51,6 +60,8 @@ import ConfigEmotaku from '@/components/ConfigEmotaku.vue';
 import FpsEmotaku from '@/components/FpsEmotaku.vue';
 import ChatEmotaku from '@/components/chatEmotaku/ChatEmotaku.vue';
 import SpriteMovingGame from '@/components/miniApps/SpriteMovingGame.vue';
+import StickersSliding from '@/components/decorationEmotaku/stickersSliding/StickersSliding.vue';
+import StatsEmotaku from '@/components/StatsEmotaku.vue';
 
 export default defineComponent({
   name: 'MainEmotaku',
@@ -58,7 +69,9 @@ export default defineComponent({
     ConfigEmotaku,
     FpsEmotaku,
     ChatEmotaku,
-    SpriteMovingGame
+    SpriteMovingGame,
+    StickersSliding,
+    StatsEmotaku
   }
 });
 </script>
@@ -68,9 +81,11 @@ export default defineComponent({
 .mainContentSkeleton {
   width: 100%;
 }
+
 aside {
   background-color: rgb(0, 0, 0);
 }
+
 .allContent {
   display: flex;
   flex-direction: column;
@@ -98,7 +113,11 @@ aside {
 }
 
 .mainLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   width: 24%;
+  padding: 12px;
 }
 
 .mainRight {
@@ -117,6 +136,7 @@ aside {
 #viewSelected {
   margin-top: 10px;
 }
+
 .mainTopInfo {
   display: flex;
   flex-wrap: wrap;
@@ -132,7 +152,22 @@ aside {
 .principalViews {
   display: flex;
   flex-direction: column;
+  
 }
+
+.principalViews a {
+  padding: 4px 0 4px 0;
+  font-weight: bold;
+  color: #61eefd;
+  text-decoration: none;
+}
+
+.principalViews a.router-link-exact-active {
+  color: #bf00f9;
+  text-decoration: underline; 
+}
+
+
 
 .selfExplanation {
   width: 75%;
@@ -171,9 +206,19 @@ aside {
   border-radius: 10px;
 }
 
+.routesEmotaku {
+  overflow: auto;
+  max-height: 300px;
+  padding: 15px;
+  border-radius: 10px;
+}
 
-
-
+.stickersSlidingChat {
+  border-radius: 6px;
+}
+.statsEmotaku {
+  border-radius: 6px;
+}
 
 @media (max-width: 1110px) {
 
