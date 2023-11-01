@@ -9,31 +9,20 @@
     <hr>
     <div class="optionListConfig">
       <label>
-        <input type="checkbox" v-model="audioEnabled" @change="toggleAudio"> Rain Sound
-      </label>
-      <label>
         <input type="checkbox" v-model="darkMode" @change="toggleTheme"> Dark Mode
       </label>
       <label>
-        <input type="checkbox" v-model="darkMode" @change="toggleTheme"> Dark Mode
+        <input type="checkbox" v-model="audioEnabled" @change="toggleAudioRain"> Rain Sound
       </label>
       <label>
-        <input type="checkbox" v-model="darkMode" @change="toggleTheme"> Dark Mode
+        <input type="checkbox" v-model="checkRainEffect" @change="toggleRainEffect"> Rain Effect
       </label>
-      <label>
-        <input type="checkbox" v-model="darkMode" @change="toggleTheme"> Dark Mode
-      </label>
-      <label>
-        <input type="checkbox" v-model="darkMode" @change="toggleTheme"> Dark Mode
-      </label>
-      <label>
-        <input type="checkbox" v-model="darkMode" @change="toggleTheme"> Dark Mode
-      </label>
+      
+      
+     
     </div>
-    
-
-
   </div>
+
 </template>
   
 <script lang="ts">
@@ -52,9 +41,10 @@ export default defineComponent({
     audioRain.volume = 0.03;
     audioRain.loop = true;
     const audioEnabled = ref(false);
+    const checkRainEffect:any = ref(false);
     const counterStore = useCounterStore(); 
 
-    const playPauseAudio = () => {
+    const playPauseAudioRain = () => {
       if (audioEnabled.value) {
         audioRain.play();
       } else {
@@ -63,9 +53,9 @@ export default defineComponent({
 
     };
 
-    const toggleAudio = () => {
+    const toggleAudioRain = () => {
       localStorage.setItem('audioEnabled', `${audioEnabled.value}`);
-      playPauseAudio();
+      playPauseAudioRain();
     };
 
 
@@ -73,7 +63,7 @@ export default defineComponent({
     const hasMouseMoved = ref(false);
     const handleAudioMove = () => {
       if (!hasMouseMoved.value) {
-        playPauseAudio();
+        playPauseAudioRain();
         counterStore.clickedConfig = true;
         const refreshItem = document.getElementById('mainRefreshConfig');
         if (refreshItem) refreshItem.style.backgroundColor = 'rgb(154, 238, 146)';
@@ -84,7 +74,13 @@ export default defineComponent({
       }
     };
 
-
+    const toggleRainEffect = () => {
+      checkRainEffect.value = checkRainEffect.value ? true : false;
+      console.log(checkRainEffect.value)
+      counterStore.checkRainEffect = checkRainEffect.value;
+      localStorage.setItem('RainEffect', checkRainEffect.value.toString());
+    };
+    
 
 
 
@@ -146,7 +142,10 @@ export default defineComponent({
       const reloadAudio = document.getElementById('refreshConfig');
       if (reloadAudio) reloadAudio.addEventListener('click', handleAudioMove);
 
-
+      const RainEffect = localStorage.getItem('RainEffect');
+      if (RainEffect == null) localStorage.setItem('RainEffect', 'false');
+      else checkRainEffect.value = String(RainEffect) == "true";
+      counterStore.checkRainEffect = checkRainEffect.value;
       //Theme checker
       prefersDarkTheme.addEventListener('change', handleThemeChange);
       // Forzar una llamada a handleThemeChange al inicio
@@ -160,7 +159,7 @@ export default defineComponent({
 
     });
 
-    return { audioEnabled, darkMode, hasMouseMoved, playPauseAudio, toggleAudio, toggleTheme };
+    return { audioEnabled, darkMode, hasMouseMoved, checkRainEffect, playPauseAudioRain, toggleAudioRain, toggleTheme, toggleRainEffect };
   }
 });
 </script>

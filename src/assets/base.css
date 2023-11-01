@@ -75,6 +75,7 @@
   font-weight: normal;
   scrollbar-color: rgb(45, 45, 45) rgb(255, 255, 255);
   scrollbar-width: thin;
+  overscroll-behavior: contain;
 }
 
 html, body {

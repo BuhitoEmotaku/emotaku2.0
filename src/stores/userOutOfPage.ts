@@ -4,6 +4,8 @@ import { defineStore } from 'pinia'
 export const useCounterStore = defineStore('userOutOfPage', () => {
   const checkerOnWeb = ref(false);
   const clickedConfig = ref(false);
+  const checkRainEffect = ref(false);
+  
   function handleVisibilityChange(){
     if (document.hidden) {
       checkerOnWeb.value = true;
@@ -18,5 +20,5 @@ export const useCounterStore = defineStore('userOutOfPage', () => {
     }
   };
 
-  return { checkerOnWeb, clickedConfig, handleVisibilityChange }
+  return { checkerOnWeb, clickedConfig, checkRainEffect, handleVisibilityChange }
 })

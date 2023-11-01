@@ -1,7 +1,7 @@
 <template>
   <h1 class="titleChatEmotaku">CHAT EMOTAKU</h1>
   <div class="contentNumActiveUsers"><span class="activeUsersText">Usuarios activos</span>:<span
-      class="numActiveUsers">&nbsp;{{ numOnlineUsers }}</span></div>
+      class="numActiveUsers">&nbsp;{{ ApiStoreController.numUsersConnected }}</span></div>
   <br>
   <div class="mainSendMessage">
     <div class="messageToSend">
@@ -14,16 +14,29 @@
 
     <button class="sendMessageButton" @click="sendNewMessage(messageCreated)">Enviar</button>
   </div>
-
   <div class="chatEmotakuStyler">
+    <div id="khe" ref="topChat" />
     <div class="messagesContainer">
-      <div class="khe" ref="bottom" />
-      <div class="chatEmotaku" v-for="message in messages" :key="message.id">
-        <span class="chatUser">{{ message.userName }}></span>
-        <div class="messageData">
-          <span class="chatMessage"><b v-if="!message.onlyImage">▶</b> <span class="chatMessageContent" v-html="message.message"></span></span>
-          <span class="chatTimeMessage">{{ message.createdAt ? time24Hours(message.createdAt.seconds) : '' }}</span>
+      <div class="chatEmotakuUnique" v-for="(messageObj, index) in messages" :key="index">
+        <div class="topMesageContainer">
+          <span class="chatUser">&lt;{{ messageObj.userName }}&gt;</span>
+          <span class="chatTimeMessage">{{ formatDateHour(messageObj.createdAt) }}</span>
         </div>
+        <div class="messageData">
+          <div>
+            <span v-for="(message, messageIndex) in messageObj.message" :key="messageIndex">
+              <!-- Verifica el tipo de mensaje -->
+              <span v-if="message.type === 'text'">{{ message.content }}</span>
+              <img :class="message.imageFeature" v-else-if="message.type === 'img'" :src="message.src"
+                :alt="message.imageFeature">
+              <a v-else-if="message.type === 'link'" :href="message.href" target="_blank" rel="norrefer">{{ message.href
+              }}</a>
+            </span>
+          </div>
+
+
+        </div>
+
       </div>
     </div>
 
@@ -32,45 +45,68 @@
   
 <script lang="ts">
 import { defineComponent, nextTick, ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import type { Ref } from 'vue';
-import { useChat } from '@/assets/scripts/firebase';
 import audioNewMessage from '@/assets/music/newMessageSound.mp3';
 import { useCounterStore } from '@/stores/userOutOfPage';
+import { useApiStore } from '@/stores/apiData';
+
+
 export default defineComponent({
-  name: 'ChatEmotaku',
+  name: 'ChatEmotaku', 
   setup() {
 
-    const { messages, numOnlineUsers, sendMessage, addUserToOnlineList, getOnlineUsersCount } = useChat();
+
+    const ApiStoreController = useApiStore();
+    const messages = ref<any>('');
 
 
     //SEND MESSAGE METHOD
     const messageCreated = ref('');
     const sendNewMessage = (text: string) => {
-      if (text != '') {
-        sendMessage(text, ''); // Puedes pasar el nombre de usuario aquí
+      scrollTopChat();
+      let textTrimed = text.trim();
+      if (textTrimed != '') {
         messageCreated.value = '';
+        ApiStoreController.createMessage(textTrimed); // Puedes pasar el nombre de usuario aquí
+
       }
     };
 
     //CONVERTER TIME TO 24H
-    const time24Hours = (timestamp: number) => {
-      const fecha = new Date(timestamp * 1000); // Multiplica por 1000 para convertir a milisegundos
-      const horas = fecha.getHours().toString().padStart(2, '0'); // Asegura que las horas tengan dos dígitos
-      const minutos = fecha.getMinutes().toString().padStart(2, '0'); // Asegura que los minutos tengan dos dígitos
-      const segundos = fecha.getSeconds().toString().padStart(2, '0'); // Asegura que los segundos tengan dos dígitos
-      return `${horas}:${minutos}:${segundos}`;
+    const formatDateHour = (timestampSeconds: string) => {
+      const milliseconds = parseInt(timestampSeconds) * 1000; // Convertir segundos a milisegundos
+      const date = new Date(milliseconds);
+
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Sumamos 1 porque los meses en JavaScript comienzan en 0 (enero).
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const seconds = date.getSeconds().toString().padStart(2, '0');
+
+      return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
+    };
+
+
+
+    const scrollTopChat = () =>{
+      nextTick(() => {
+            topChat.value?.scrollIntoView({ behavior: 'smooth' });
+      });
     }
 
 
     //CHECK USER DISCONNECT FAKE ARREGLAR CON VISIBILITY EN VEZ DE TIMEOUT
     const cofigVariablesWebStore = useCounterStore();
 
-
     //ON MOUNTED //ACTIVATE AUDIO MESSAGE IF OUT_PAGE AND NEW MESSAGE
     const audioMessage = new Audio(audioNewMessage) as HTMLAudioElement;
     audioMessage.volume = 0.03;
     const checkerNewMessages = ref(false);
-    onMounted(() => {
+    onMounted(async () => {
+      //iniciarWebsocket
+      await ApiStoreController.startWebWorkerEmotaku();
+      //Recibir primeros mensajes
+      messages.value = await ApiStoreController.getMessages();
       //document.addEventListener("visibilitychange", reconectUserWhenIsOnPage);
 
       setInterval(() => {
@@ -82,43 +118,32 @@ export default defineComponent({
         }
       }, 300000);
 
-      
+
     });
 
 
     //BEFORE MOUNTED
     onBeforeUnmount(() => {
-      
+
     });
 
 
     //WATCH
-    const bottom: Ref<HTMLElement | null> = ref(null);
+    const topChat= ref<any>(null);
+    let contChat = 0
     watch(
-      messages,
+      () => ApiStoreController.checkerNewMessages, // Propiedad a observar en tu store
       () => {
-        checkerNewMessages.value = true;
-        nextTick(() => {
-          bottom.value?.scrollIntoView({ behavior: 'smooth' });
-        })
-
-      }, { deep: true }
-    );
-/*
-    watch(
-      () => cofigVariablesWebStore.checkerOnWeb, // Devuelve la propiedad que deseas observar
-      (newValue) => {
-        if (newValue === false) {
-          // La variable `checkerOnWeb` ha cambiado de true a false
-          // Ejecuta el código necesario aquí
-          addUserToOnlineList();
-          getOnlineUsersCount();
-          console.log(numOnlineUsers.value);
-        }
+          messages.value = ApiStoreController.allMessages;
+          contChat = contChat++;
+          if(contChat > 1)scrollTopChat();
+          
+        
       }
     );
-    */
-    return { messages, messageCreated, numOnlineUsers, sendNewMessage, time24Hours };
+
+
+    return { topChat, messageCreated, messages, ApiStoreController, sendNewMessage, formatDateHour, scrollTopChat };
   }
 
 });
@@ -197,12 +222,12 @@ export default defineComponent({
 
 }
 
-.chatEmotaku {
+.chatEmotakuUnique {
   text-align: left;
   margin: 5px 0 5px 0;
   background-color: #0f0f0f;
   border-radius: 5px;
-  padding: 6px;
+  padding: 6px 6px 14px 6px;
 }
 
 .messagesContainer {
@@ -213,22 +238,60 @@ export default defineComponent({
   color: green;
 }
 
-.chatMessage, .chatMessageContent {
-  word-break: break-word;
-  padding: 5px 0 0 6px;
-}
-
-.messageData {
+.topMesageContainer {
   display: flex;
   justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 3px;
 }
 
 .chatTimeMessage {
   padding-right: 5px;
+
+}
+
+.messageData {
+  width: 80%;
+  padding: 2px 0 0 20px;
+  word-break: break-all;
+}
+
+.sticker {
+  width: 190px;
+  height: auto;
+  border: 2px solid rgb(197, 0, 246);
+  border-radius: 7px;
+}
+
+.nonSticker {
+  width: 20px;
+
 }
 
 .khe {
   background-color: red;
+}
+
+@media (max-width: 650px) {
+  .topMesageContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .chatUser {
+    font-size: 20px;
+
+  }
+
+  .messageData {
+    justify-content: center;
+    display: flex;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+  }
 }
 </style>
   

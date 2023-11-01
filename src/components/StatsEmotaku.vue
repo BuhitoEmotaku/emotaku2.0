@@ -3,25 +3,24 @@
     <div class="titleStats">
       <h1>Stats</h1>
     </div>
-   <h1 class="totalVisits">Visitas totales -> {{ totalEntries }}</h1>
-   <h1 class="uniqueUsers">Usuarios únicos -> {{ totalUniqueUsers }}</h1>
+   <h1 class="totalVisits">Visitas totales -> {{ ApiStoreController.totalEntries }}</h1>
+   <h1 class="uniqueUsers">Usuarios únicos -> {{ ApiStoreController.uniqueEntries }}</h1>
 
   </div>
 </template>
   
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ref, onMounted, watch } from 'vue';
-import { statsValues } from '@/assets/scripts/firebase';
+import { useApiStore } from '@/stores/apiData';
 export default defineComponent({
 
   name: 'StatsEmotaku',
   setup() {
 
     //GET ENTRIES AND UNIQUE USERS
-    const { totalEntries, totalUniqueUsers } = statsValues();
+    const ApiStoreController = useApiStore();
 
-    return { totalEntries, totalUniqueUsers };
+    return { ApiStoreController };
   }
 });
 </script>

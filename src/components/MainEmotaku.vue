@@ -1,5 +1,6 @@
 <template>
   <FpsEmotaku></FpsEmotaku>
+  <RainEmotaku></RainEmotaku>
   <main class="mainContentSkeleton">
     <div class="allContent">
       <aside class="mainContent">
@@ -62,7 +63,7 @@ import ChatEmotaku from '@/components/chatEmotaku/ChatEmotaku.vue';
 import SpriteMovingGame from '@/components/miniApps/SpriteMovingGame.vue';
 import StickersSliding from '@/components/decorationEmotaku/stickersSliding/StickersSliding.vue';
 import StatsEmotaku from '@/components/StatsEmotaku.vue';
-
+import RainEmotaku from '@/components/decorationEmotaku/rainEmotaku/RainEmotaku.vue';
 export default defineComponent({
   name: 'MainEmotaku',
   components: {
@@ -71,7 +72,8 @@ export default defineComponent({
     ChatEmotaku,
     SpriteMovingGame,
     StickersSliding,
-    StatsEmotaku
+    StatsEmotaku,
+    RainEmotaku
   }
 });
 </script>
