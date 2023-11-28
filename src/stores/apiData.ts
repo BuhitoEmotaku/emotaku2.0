@@ -9,7 +9,7 @@ import { useEmotakuWebSocket } from '@/stores/emotakuWebSocket'; // Importa tu s
 export const useApiStore = defineStore('apiEmotakuStore', () => {
 
   const EmotakuWebSocketStore = useEmotakuWebSocket();
-  
+
   const allMessages = ref<any>([[]]);
   const checkerNewMessages = ref<boolean>(false);
   const numUsersConnected = ref<any>(0);
@@ -19,39 +19,110 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
   const uniqueEntries = ref<any>(0);
   const totalEntriesChecker = ref<any>(false);
 
+  const buhitoOnline = ref<any>();
+
+  const allMusic = ref<any>(false);
+  const songSelected = ref<any>(false);
+
+  const userNameDNI = ref<any>();
+
+
+  const wsEmotaku = ref<any>();
 
   const getMessages = async () => { // Asegurarse de que id sea de tipo any o definir un tipo específico
     try {
       const response: ResponseData = await emotakuServices.getAllMessage();
+      checkerNewMessages.value = !checkerNewMessages.value;
       return response.data;
     } catch (error) {
       console.error('Error getMessages Emotaku Chat');
     }
   }
 
+  const getMusic = async () => { // Asegurarse de que id sea de tipo any o definir un tipo específico
+    try {
+      const response: ResponseData = await emotakuServices.getAllmusic();
+      allMusic.value = response.data;
+      return response.data;
+    } catch (error) {
+      console.error('Error getMessages Emotaku Chat');
+    }
+  }
+
+  const requestSong = (folder: any, subFolder: any, song: any) => { // Asegurarse de que id sea de tipo any o definir un tipo específico
+    try {
+      songSelected.value = `https://emotaku.ddns.net/apiEmotaku/requestSong/${folder}/${subFolder}/${song}`;
+      return songSelected.value;
+    } catch (error) {
+      console.error('Error getMessages Emotaku Chat');
+    }
+  }
+
+  const commandsEmotaku = async (fullCommand: string) => {
+    try {
+      // Definir un array de comandos permitidos
+      const allowedCommands = ['/admin', '/check', '/good']; // Agrega más comandos según sea necesario
+
+      // Dividir la cadena en palabras para obtener el comando y el código
+      const words = fullCommand.trim().split(' ');
+
+      // Obtener el primer elemento como el comando
+      const command = words[0];
+
+      // Obtener el segundo elemento como el código
+      const code = words[1];
+
+      // Verificar si el comando proporcionado está en la lista de comandos permitidos
+      const isValidCommand = allowedCommands.some(validCommand => command.startsWith(validCommand));
+
+      if (isValidCommand && words.length == 2) {
+        // El comando es válido, procede a enviar el mensaje
+        const commandCode = {
+          command: command,
+          code: code
+        };
+        await wsEmotaku.value.send(JSON.stringify(commandCode));
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Error en commandsEmotaku:', error);
+    }
+  };
+
   const startWebWorkerEmotaku = async () => {
     createEntry();
-    const response = await EmotakuWebSocketStore.receiveAllMessages((message: any) => {
+    const response = await EmotakuWebSocketStore.receiveAllMessagesWebsocket((message: any) => {
+      wsEmotaku.value = EmotakuWebSocketStore.ws;
+
       try {
         let parsedMessage = JSON.parse(message);
+
         if ('numUsersOnline' in parsedMessage) {
           numUsersConnected.value = parseInt(parsedMessage.numUsersOnline);
+        }
 
-        } else if ('totalEntries' in parsedMessage) {
-          console.log(parsedMessage.totalEntries);
+        else if ('buhitoOnline' in parsedMessage) {
+          buhitoOnline.value = parsedMessage.buhitoOnline;
+        }
+
+        else if ('totalEntries' in parsedMessage) {
           totalEntries.value = parseInt(parsedMessage.totalEntries);
           uniqueEntries.value = parseInt(parsedMessage.uniqueEntries);
-          if(!totalEntriesChecker.value){
+          if (!totalEntriesChecker.value) {
             totalEntriesStats.value = totalEntries.value;
             totalEntriesChecker.value = true;
           }
-          
+
         }
+
         else {
           allMessages.value = parsedMessage;
           checkerNewMessages.value = !checkerNewMessages.value;
 
         }
+
       } catch (error) {
         console.error('Error al analizar el mensaje JSON:', error);
       }
@@ -59,11 +130,14 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
   };
 
 
-  const sendMessage = async (text: any, displayName: string | null) => {
+  const sendMessage = async (text: any) => {
+    if (await commandsEmotaku(text)) return false;
     const regExp = /((?:http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?)/g;
     const textParts = text.split(regExp);
     const filteredTextParts = textParts.filter((part: string) => part.trim() !== '').map((part: string) => part.replace(/ +/g, ' '));
-    const userName = displayName || `Anonimous-${totalEntriesStats.value}`;
+    const userName = (userNameDNI.value && userNameDNI.value !== '')
+      ? userNameDNI.value
+      : '';
     //const processedMessage = await processMessages(text); // Procesa el mensaje antes de guardarlo
     const timezone = new Date().getTime() / 1000;
 
@@ -76,8 +150,9 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
   }
 
   const createMessage = async (message: any) => { // Asegurarse de que id sea de tipo any o definir un tipo específico
-    const dataMessage = await sendMessage(message, '');
+    const dataMessage = await sendMessage(message);
     try {
+      if (!dataMessage) return '';
       const response = await emotakuServices.createMessage(JSON.stringify(dataMessage));
 
     } catch (error) {
@@ -194,15 +269,22 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
   }
 
   return {
+    wsEmotaku,
+    buhitoOnline,
     allMessages,
     checkerNewMessages,
     numUsersConnected,
     totalEntries,
     totalEntriesStats,
     uniqueEntries,
+    allMusic,
+    songSelected,
+    userNameDNI,
     getMessages,
     updatePublished,
     startWebWorkerEmotaku,
-    createMessage
+    createMessage,
+    getMusic,
+    requestSong
   };
 });

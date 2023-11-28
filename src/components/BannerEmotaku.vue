@@ -1,18 +1,24 @@
 <template>
+  <div id="appsView"></div>
   <header>
     <div class="emotakuTitle">
       <span class="emoTitle">EMO</span><span class="takuTitle">TAKU</span>
     </div>
 
     <div id="emotakuGirl">
-      <img @click="playPauseAudio" src="../assets/images/characters/pikachu.png" alt="" class="pikachuCharacter">
+      <img @click="onOffLedPannel" src="../assets/images/characters/pikachu.webp" alt=""
+        :class="['pikachuCharacter', { 'pikachuOn': pannelStatus == true }]">
       <!--
       <div class="backgroundWrapper">
         <img src="../assets/♡.jpg" alt="Background Image">
       </div>
       -->
       <div class="imgInsideGirl">
+        <img :class="['pannelLed', { 'pannelLedOn': pannelStatus == true }]"
+          src="../assets/images/emotakuLed/logoEmotau.png" alt="" @mouseover="pannelSoundPlay()"
+          @mouseout="pannelSoundPause()">
         <div class="imgBanner">
+
         </div>
       </div>
       <div class="imgInsideGirlHands">
@@ -25,20 +31,43 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
 import audioPika from '@/assets/music/pikachuSound.mp3';
+import neonSoundEffectAud from '@/assets/music/neonSoundEffect.mp3';
+import { useUserConfig } from '@/stores/userConfigStates';
+
 export default defineComponent({
   name: 'BannerEmotaku',
   setup() {
 
-    const hasMouseMoved = ref(false);
     const audioPikachu = new Audio(audioPika);
     audioPikachu.volume = 0.19;
-    const audioEnabled = ref(false);
 
-    const playPauseAudio = () => {
-      audioPikachu.play();
+    const neonSoundEffect = new Audio(neonSoundEffectAud);
+    neonSoundEffect.volume = 0.3;
+    neonSoundEffect.loop = true;
+
+    const pannelStatus = ref<any>(true);
+
+    const userConfigStore = useUserConfig();
+
+
+    const onOffLedPannel = () => {
+      pannelStatus.value = !pannelStatus.value;
+      if (pannelStatus.value) audioPikachu.play();
     };
+
+    const pannelSoundPlay = () => {
+      if (pannelStatus.value == true && userConfigStore.clickedConfig) neonSoundEffect.play();
+    };
+
+    const pannelSoundPause = () => {
+      if (pannelStatus.value == true) neonSoundEffect.pause();
+    };
+
     return {
-      playPauseAudio
+      pannelStatus,
+      onOffLedPannel,
+      pannelSoundPlay,
+      pannelSoundPause
     }
   }
 
@@ -48,32 +77,28 @@ export default defineComponent({
   <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #emotakuGirl {
-
-  overflow: visible;
-  width: 100%;
-  height: 160px;
   background-color: transparent;
   box-sizing: border-box;
-  position: relative;
+  height: 160px;
+  overflow: visible;
   perspective: 70px;
-  /* Profundidad de perspectiva */
-
+  position: relative;
+  width: 100%;
 }
 
 span {
-  /* font-family: Tetsuya; */
+  color: rgba(255, 255, 255, 0.91);
   font-family: Pixel Titles;
   font-size: 100px;
   text-align: center;
-  color: rgba(242, 188, 247, 0.91);
   text-shadow: 0 0 80px #000000, 0 0 10px #000000, 0 0 15px #000000, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
 }
 
 .emoTitle {
-  animation: glow 4.76s ease-in-out infinite alternate, parpadeo .07s infinite;
-  z-index: 10;
-  position: relative;
+  animation: glowEmo 4.76s ease-in-out infinite alternate;
   font-size: 130px;
+  position: relative;
+  z-index: 10;
 }
 
 .takuTitle {
@@ -81,144 +106,201 @@ span {
   z-index: 10;
 }
 
-@keyframes glow {
-  from {
-    text-shadow: 0 0 80px #000000, 0 0 10px #000000, 0 0 15px #000000, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
-    /*text-shadow: 0 0 80px #000000, 0 0 10px #000000, 0 0 15px #000000, 0 0 20px #000000, 0 0 25px #000000, 0 0 30px #000000, 0 0 35px #000000;*/
-
-  }
-
-  to {
-    /*text-shadow: 0 0 80px #fff, 0 0 20px #fff, 0 0 30px #d341ff, 0 0 40px #d341ff, 0 0 50px #d341ff, 0 0 60px #d341ff, 0 0 70px #d341ff;*/
-    text-shadow: 0 0 80px #610085, 0 0 10px #610085, 0 0 15px #610085, 0 0 20px #cecece, 0 0 25px #cecece, 0 0 30px #cecece, 0 0 35px #cecece;
-    color: rgba(20, 20, 20, 0.854);
-  }
-}
-
 .backgroundWrapper {
-  overflow: hidden;
-  width: 100%;
   height: 100%;
+  overflow: hidden;
   position: fixed;
-
+  width: 100%;
 }
 
 .backgroundWrapper img {
-  width: 48%;
-  /* Ajustar el tamaño de la imagen de fondo según sea necesario */
-  object-fit: cover;
   background-repeat: no-repeat;
   margin-left: -575px;
   margin-top: -220px;
+  object-fit: cover;
+  width: 48%;
 }
 
 .imgInsideGirl,
 .imgInsideGirlHands {
-
-  width: 100%;
-  /* Ajusta el ancho según tus necesidades */
-  height: 165px;
-  /* Ajusta la altura según tus necesidades */
-  box-sizing: border-box;
-  position: absolute;
-  z-index: 999;
   border-radius: 10px;
+  box-sizing: border-box;
+  height: 165px;
+  position: absolute;
+  width: 100%;
 }
 
 .imgInsideGirl {
-  overflow: hidden;
   background-color: #000000d4;
-  
+  overflow: hidden;
 }
 
 .imgBanner {
-  width: 680px;
+  background-image: url('../assets/blueemotaku.webp');
+  background-position: 0 -210px;
+  background-size: cover;
+  float: right;
   height: 350px;
+  margin-right: -50px;
   object-fit: cover;
   pointer-events: none;
-  z-index: 10;
   position: relative;
-  background-image: url('../assets/blueemotaku.png');
-  background-size: cover;
-  background-position: 0 -210px;
-  float: right;
-  margin-right: -50px;
-  
-
+  width: 680px;
+  z-index: 10;
 }
 
 .imgHands {
-  width: 590px;
+  background-image: url('../assets/blueemotakuHands.webp');
+  background-position: 0 -276px;
+  background-size: cover;
+  display: block;
   height: 350px;
+  margin-bottom: 3px;
   object-fit: cover;
   pointer-events: none;
-  display: block;
-  z-index: 10;
-  margin-bottom: 3px;
   position: absolute;
-  background-image: url('../assets/blueemotakuHands.png');
-  background-size: cover;
-  background-position: 0 -276px;
   right: 0;
-  
-
+  width: 590px;
+  z-index: 10;
 }
 
 .pikachuCharacter {
-  position: absolute;
-  width: 50px;
-  height: auto;
-  left: 0;
-  margin-top: -47px;
-  margin-left: -5px;
-  transform: rotate(-30deg);
   cursor: pointer;
   filter: hue-rotate(331.2deg);
+  height: auto;
+  left: 0;
+  margin-left: -5px;
+  margin-top: -47px;
+  position: absolute;
+  transform: rotate(-30deg);
+  width: 50px;
 }
 
-.pikachuCharacter:hover {
-  filter: hue-rotate(190deg);
+.pikachuOn {
+  filter: hue-rotate(310deg);
   transform: rotate(0deg);
+}
+
+.pannelLed {
+  filter: hue-rotate(280.8deg) brightness(12%);
+  height: 106%;
+  image-rendering: -moz-crisp-edges;
+  left: 4%;
+  position: fixed;
+  z-index: 999;
+}
+
+.pannelLedOn {
+  animation: parpadeo .07s infinite;
+  filter: hue-rotate(260.8deg) brightness(100%) saturate(160%);
+}
+
+@keyframes glowEmo {
+  from {
+    text-shadow: 0 0 80px #000000, 0 0 10px #000000, 0 0 15px #000000, 0 0 20px #4a0086, 0 0 25px #4a0086, 0 0 30px #4a0086, 0 0 35px #4a0086;
+  }
+
+  to {
+    color: rgba(20, 20, 20, 0.854);
+    text-shadow: 0 0 80px #610085, 0 0 10px #610085, 0 0 15px #610085, 0 0 20px #cecece, 0 0 25px #cecece, 0 0 30px #cecece, 0 0 35px #cecece;
+  }
+}
+
+@keyframes parpadeo {
+  0% {
+    filter: hue-rotate(260.8deg) brightness(100%) saturate(160%) contrast(88%);
+    opacity: 0.59;
+  }
+
+  25% {
+    filter: hue-rotate(260.8deg) brightness(100%) saturate(160%) contrast(150%);
+    opacity: 0.90;
+  }
+
+  50% {
+    filter: hue-rotate(260.8deg) brightness(100%) saturate(160%) contrast(88%);
+    opacity: 0.59;
+  }
+
+  75% {
+    filter: hue-rotate(260.8deg) brightness(100%) saturate(160%) contrast(150%);
+    opacity: 0.9;
+  }
+
+  100% {
+    filter: hue-rotate(260.8deg) brightness(100%) saturate(160%) contrast(88%);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 1110px) {
   #emotakuGirl {
-    width: 95%;
-    margin: 0 auto;
+    display: none;
   }
 
-
+  .emotakuTitle {
+    margin: 30px 0 20px 0;
+  }
 }
 
 @media (max-width: 650px) {
   span {
-    font-size: 100px;
+    font-size: 90px;
   }
+
   .emoTitle {
     font-size: 110px;
   }
 }
+
 @media (max-width: 582px) {
   span {
     font-size: 85px;
   }
-  .emotakuTitle {
-    margin: 30px 0 30px 0;
-  }
+
   .emoTitle {
     font-size: 95px;
   }
-  
 }
 
-@media (max-width: 476px) {
+@media (max-width: 500px) {
+  .emotakuTitle {
+    font-size: 20px;
+  }
+
   span {
     font-size: 60px;
   }
+}
+
+@media (max-width: 476px) {
+  .emotakuTitle {
+    font-size: 20px;
+  }
+
+  span {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 450px) {
   .emoTitle {
     font-size: 70px;
   }
 
+  span {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 400px) {
+  .emoTitle {
+    font-size: 60px;
+  }
+
+  span {
+    font-size: 50px;
+  }
 }
 </style>
   

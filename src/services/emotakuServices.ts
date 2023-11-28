@@ -10,7 +10,15 @@ class EmotakuService {
   getAllMessage(): Promise<any> {
     return http.get("/messages");
   }
+  
+  getlastMessage(): Promise<any> {
+    return http.get("/lastMessage");
+  }
 
+  getAllmusic(): Promise<any> {
+    return http.get("/musicEmotaku");
+  }
+  
   get(id: any): Promise<any> {
     return http.get(`/tutorials/${id}`);
   }

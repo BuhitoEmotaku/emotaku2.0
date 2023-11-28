@@ -14,7 +14,12 @@ h1, h2, h3, h4, h5, h6{
   font-family: Pixel Titles;
 }
 
-.imgInsideGirlHands, .mainContent, aside {
+.mainContent, .imgInsideGirl, aside {
+  background-color: var(--color-backgroundMain);
+  color: var(--color-colorMain);
   outline: var(--outlineContent);
+  border-radius: 10px;
 }
+
+/* ------------ CHAT ------------ */
 

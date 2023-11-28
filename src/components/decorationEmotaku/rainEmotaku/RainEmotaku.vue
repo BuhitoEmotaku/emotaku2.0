@@ -1,40 +1,42 @@
 <template>
-  <div v-if="counterStore.checkRainEffect" class="rainEmotaku">
-<div class="rainContent"></div>
+  <div v-if="userConfigStore.checkRainEffect" class="rainEmotaku">
+    <div class="rainContent"></div>
   </div>
 </template>
   
 <script lang="ts">
 import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
-import { useCounterStore } from '@/stores/userOutOfPage';
+import { useUserConfig } from '@/stores/userConfigStates';
 export default defineComponent({
   name: 'RainEmotaku',
-  setup(){
-    const counterStore = useCounterStore(); 
-    
+  setup() {
+    const userConfigStore = useUserConfig();
+
     return {
-      counterStore
+      userConfigStore
     }
   }
 });
 </script>
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>.rainEmotaku {
-  width: 100vw;
+<style scoped>
+.rainEmotaku {
   height: 100%;
-  position: fixed;
   left: 0;
+  top: 0;
+  position: fixed;
+  width: 100vw;
   z-index: -1;
 }
 
 .rainContent {
-  width: 100%;
-  height: 100%;
   background-image: url(../../../assets/images/rain/rainEmotakuEffect.gif);
   background-size: cover;
-  opacity: 0.07;
   filter: hue-rotate(100deg);
+  height: 100%;
+  opacity: 0.17;
+  width: 100%;
 }
 </style>
   

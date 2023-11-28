@@ -18,22 +18,21 @@ export default defineComponent({
   <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 footer {
-  background-color: black;
   color: green;
   margin-bottom: 30px;
 }
 
 .footerAuthor {
   font-weight: bold;
-  width: 50%;
   padding: 3px;
+  width: 50%;
 }
 
 @media (max-width: 1110px) {
   footer {
-    width: 95%;
     margin: 0 auto;
     margin-bottom: 30px;
+    width: 95%;
   }
 }
 </style>

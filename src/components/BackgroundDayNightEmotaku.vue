@@ -1,7 +1,7 @@
 <template>
-    <div :class="['backgroundSetup', currentBackgroundClass]" :style="{ opacity: currentOpacity }">
-      <!-- Contenido de tu aplicación -->
-    </div>
+  <div :class="['backgroundSetup', currentBackgroundClass]" :style="{ opacity: currentOpacity }">
+    <!-- Contenido de tu aplicación -->
+  </div>
 </template>
   
 <script lang="ts">
@@ -31,7 +31,7 @@ export default defineComponent({
       setInterval(() => {
         currentTime.value = new Date().getHours();
         currentTimeMin.value = new Date().getMinutes();
-      }, 600);
+      }, 60000);
     });
 
     const currentBackgroundClass = ref<string>(backgroundClass.value);
@@ -57,29 +57,25 @@ export default defineComponent({
   <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .backgroundSetup {
-  /*330*/
-  filter: blur(5px) hue-rotate(330deg);
-  background-size: cover;
-  /* La imagen se ajusta para cubrir todo el elemento */
+  background-position: center;
   background-repeat: repeat;
-  /* Asegura que la imagen de fondo se repita */
+  background-size: cover;
+  filter: blur(5px) hue-rotate(330deg);
+  left: 0;
   min-height: 100vh;
   min-width: 100%;
   position: fixed;
   top: 0;
-  left: 0;
-  background-position: center;
-  z-index: -9999;
   transition: opacity 2s ease;
-  /* Transición de 2 segundos de opacidad */
+  z-index: -9999;
 }
 
 .backgroundImgDay {
-  background-image: url("../assets/19276.jpg");
   background-color: rgb(211, 77, 99);
-  /* Rosa claro */
+  background-image: url("../assets/19276.webp");
 }
 
 .backgroundImgNight {
-  background-image: url("../assets/813919.jpg");
-}</style>
+  background-image: url("../assets/813919.webp");
+}
+</style>

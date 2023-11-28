@@ -1,25 +1,28 @@
 <template>
   <h1 class="titleChatEmotaku">CHAT EMOTAKU</h1>
-  <div class="contentNumActiveUsers"><span class="activeUsersText">Usuarios activos</span>:<span
-      class="numActiveUsers">&nbsp;{{ ApiStoreController.numUsersConnected }}</span></div>
+  <div class="contentNumActiveUsers"><span class="activeUsersText">Usuarios activos</span>:&nbsp;<span
+      class="numActiveUsers">{{ ApiStoreController.numUsersConnected }}</span><span class="numActiveUsersInfo">1 Usuario
+      por IP! </span>
+  </div>
   <br>
   <div class="mainSendMessage">
     <div class="messageToSend">
       <label for="messageToSend">
         <input type="text" id="messageToSend" v-model="messageCreated" @keyup.enter="sendNewMessage(messageCreated)"
-          placeholder="Bienvenido al chat! -- Se respetuoso y amable ✧✿◕‿◕✿ <3" autocomplete="off" maxlength="300"
-          required>
+          placeholder="Bienvenido al chat! -- Se respetuoso y amable ✧✿◕‿◕✿ <3 (max 400lts)" autocomplete="off"
+          maxlength="400" required>
       </label>
     </div>
 
     <button class="sendMessageButton" @click="sendNewMessage(messageCreated)">Enviar</button>
   </div>
-  <div class="chatEmotakuStyler">
-    <div id="khe" ref="topChat" />
+  <div class="chatEmotakuStyler" id="chatScrollController">
+    <div class="topChatReference" ref="topChat" />
     <div class="messagesContainer">
-      <div class="chatEmotakuUnique" v-for="(messageObj, index) in messages" :key="index">
+      <div class="chatEmotakuUnique" v-for="(messageObj, index) in messages" :key="messageObj.id"
+        :class="lastMessageEffect(index) ? 'lastMessage' : null">
         <div class="topMesageContainer">
-          <span class="chatUser">&lt;{{ messageObj.userName }}&gt;</span>
+          <span :class="['chatUser', { 'userAdmin': messageObj.admin }]">&lt;{{ messageObj.userName }}&gt;</span>
           <span class="chatTimeMessage">{{ formatDateHour(messageObj.createdAt) }}</span>
         </div>
         <div class="messageData">
@@ -46,28 +49,29 @@
 <script lang="ts">
 import { defineComponent, nextTick, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import audioNewMessage from '@/assets/music/newMessageSound.mp3';
-import { useCounterStore } from '@/stores/userOutOfPage';
+import { useUserConfig } from '@/stores/userConfigStates';
 import { useApiStore } from '@/stores/apiData';
 
 
 export default defineComponent({
-  name: 'ChatEmotaku', 
+  name: 'ChatEmotaku',
   setup() {
 
+    const audioMessage = new Audio(audioNewMessage) as HTMLAudioElement;
+    audioMessage.volume = 0.019;
 
     const ApiStoreController = useApiStore();
-    const messages = ref<any>('');
-
+    const messages = ref<any>([]);
+    let messageCheck = false;
 
     //SEND MESSAGE METHOD
     const messageCreated = ref('');
     const sendNewMessage = (text: string) => {
-      scrollTopChat();
       let textTrimed = text.trim();
       if (textTrimed != '') {
         messageCreated.value = '';
         ApiStoreController.createMessage(textTrimed); // Puedes pasar el nombre de usuario aquí
-
+        messageCheck = true;
       }
     };
 
@@ -88,37 +92,20 @@ export default defineComponent({
 
 
 
-    const scrollTopChat = () =>{
-      nextTick(() => {
-            topChat.value?.scrollIntoView({ behavior: 'smooth' });
-      });
-    }
+
 
 
     //CHECK USER DISCONNECT FAKE ARREGLAR CON VISIBILITY EN VEZ DE TIMEOUT
-    const cofigVariablesWebStore = useCounterStore();
-
+    const cofigVariablesWebStore = useUserConfig();
     //ON MOUNTED //ACTIVATE AUDIO MESSAGE IF OUT_PAGE AND NEW MESSAGE
-    const audioMessage = new Audio(audioNewMessage) as HTMLAudioElement;
-    audioMessage.volume = 0.03;
-    const checkerNewMessages = ref(false);
+
     onMounted(async () => {
       //iniciarWebsocket
       await ApiStoreController.startWebWorkerEmotaku();
+
       //Recibir primeros mensajes
       messages.value = await ApiStoreController.getMessages();
       //document.addEventListener("visibilitychange", reconectUserWhenIsOnPage);
-
-      setInterval(() => {
-        if (cofigVariablesWebStore.checkerOnWeb && checkerNewMessages.value && cofigVariablesWebStore.clickedConfig) {
-          audioMessage.play();
-          checkerNewMessages.value = false;
-        } else {
-          checkerNewMessages.value = false;
-        }
-      }, 300000);
-
-
     });
 
 
@@ -128,22 +115,71 @@ export default defineComponent({
     });
 
 
+
+    const scrollToChat = () => {
+      nextTick(() => {
+        topChat.value?.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    const scrollTopChat = () => {
+      const scrollerChat = document.getElementById('chatScrollController');
+      nextTick(() => {
+        if (scrollerChat != null) {
+          scrollerChat.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    };
+
+    const lastMessageEffect = (index: any) => {
+      return index === 0;
+    }
+
+    let checkFirstTime = 0;
     //WATCH
-    const topChat= ref<any>(null);
-    let contChat = 0
+    const topChat = ref<any>(null);
+    const botMessage = [{
+      createdAt: "1699908262.734",
+      message: {
+        content: "Bienvenido!",
+        type: "text"
+      },
+      userName: "Anonimous-1484"
+    }];
+
+
     watch(
       () => ApiStoreController.checkerNewMessages, // Propiedad a observar en tu store
       () => {
-          messages.value = ApiStoreController.allMessages;
-          contChat = contChat++;
-          if(contChat > 1)scrollTopChat();
-          
-        
+        if (checkFirstTime == 0) {
+          //messages.value = [botMessage, ...messages.value]; //MAKE INITIAL BOT MESSAGE
+          checkFirstTime = 1; // Set to a non-zero value to indicate that it's not the first time anymore
+        } else {
+          if (messageCheck == true) {
+            scrollToChat();
+            scrollTopChat();
+            messageCheck = false;
+          }
+
+          const scrollerChat = document.getElementById('chatScrollController');
+          if (scrollerChat != null) {
+            if (scrollerChat.scrollTop == 0) {
+              scrollTopChat();
+            }
+          }
+          messages.value = [ApiStoreController.allMessages, ...messages.value];
+
+          if (cofigVariablesWebStore.checkerOnWeb && cofigVariablesWebStore.clickedConfig && !cofigVariablesWebStore.checkMuteChat) {
+            audioMessage.play();
+          }
+        }
+
       }
     );
 
+    addEventListener('visibilitychange', cofigVariablesWebStore.handleVisibilityChange);
 
-    return { topChat, messageCreated, messages, ApiStoreController, sendNewMessage, formatDateHour, scrollTopChat };
+    return { topChat, messageCreated, messages, ApiStoreController, sendNewMessage, formatDateHour, scrollTopChat, lastMessageEffect };
   }
 
 });
@@ -153,9 +189,10 @@ export default defineComponent({
 <style scoped>
 .chatEmotakuStyler {
   border: 2px solid white;
-  padding: 10px 0 10px 0;
+  border-radius: 10px;
   max-height: 410px;
   overflow: auto;
+  padding: 10px 0 10px 0;
 }
 
 .titleChatEmotaku {
@@ -163,71 +200,91 @@ export default defineComponent({
 }
 
 .contentNumActiveUsers {
+  align-items: center;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .activeUsersText {
-
   color: green;
 }
 
 .numActiveUsers {
   color: red;
+  cursor: pointer;
   font-size: 20px;
 }
 
-.mainSendMessage {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 36px;
-  margin-bottom: 10px;
+.numActiveUsersInfo {
+  background-color: black;
   border: 2px solid white;
+  border-radius: 10px;
+  color: white;
+  display: none;
+  height: 50px;
+  margin-right: 35px;
+  position: absolute;
+  width: 210px;
+  z-index: 100;
+}
+
+.numActiveUsers:hover+.numActiveUsersInfo {
+  align-items: center;
+  color: green;
+  display: flex;
+  justify-content: center;
+}
+
+.mainSendMessage {
+  border: 2px solid white;
+  border-radius: 4px;
+  display: flex;
+  height: 36px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
 .messageToSend {
-  flex-grow: 3;
-  /* El input ocupa más espacio (2 veces más) */
-  height: 100%;
   background-color: #000;
-  color: #fff;
   border: 1px solid #383838;
+  color: #fff;
+  flex-grow: 3;
   font-family: MS Gothic, monospace;
+  height: 100%;
 }
 
-
 #messageToSend {
-  width: 100%;
   background-color: black;
   color: white;
+  font-size: 18px;
   height: 100%;
   padding-left: 10px;
-  font-size: 18px;
+  width: 100%;
 }
 
 .sendMessageButton {
-  flex-grow: 0.5;
-  /* El botón ocupa menos espacio (1 vez) */
-  width: auto;
-  /* Anchura automática para ajustarse al contenido */
   background-color: rgb(0, 0, 0);
   color: white;
   cursor: pointer;
+  flex-grow: 0.5;
+  width: auto;
 }
 
 .sendMessageButton:hover {
   background-color: rgb(32, 32, 32);
-
 }
 
 .chatEmotakuUnique {
-  text-align: left;
-  margin: 5px 0 5px 0;
   background-color: #0f0f0f;
   border-radius: 5px;
+  margin: 5px 0 5px 0;
   padding: 6px 6px 14px 6px;
+  text-align: left;
+}
+
+.chatEmotakuUnique:hover {
+  background-color: #0d0d0d;
 }
 
 .messagesContainer {
@@ -238,38 +295,58 @@ export default defineComponent({
   color: green;
 }
 
+.userAdmin {
+  color: #00ffcf;
+}
+
 .topMesageContainer {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
   margin-bottom: 3px;
+  padding: 10px;
 }
 
 .chatTimeMessage {
   padding-right: 5px;
-
 }
 
 .messageData {
-  width: 80%;
   padding: 2px 0 0 20px;
+  width: 80%;
   word-break: break-all;
 }
 
 .sticker {
-  width: 190px;
-  height: auto;
   border: 2px solid rgb(197, 0, 246);
   border-radius: 7px;
+  height: auto;
+  width: 190px;
 }
 
 .nonSticker {
   width: 20px;
-
 }
 
-.khe {
-  background-color: red;
+.topChatReference {
+  margin-bottom: 5px;
+}
+
+.lastMessage {
+  animation: 0.3s newMessageEffect linear;
+  position: relative;
+}
+
+@keyframes newMessageEffect {
+  from {
+    margin-left: 200px;
+    margin-right: 200px;
+    transform: rotateX(90deg);
+  }
+
+  to {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 @media (max-width: 650px) {
@@ -281,17 +358,17 @@ export default defineComponent({
   }
 
   .chatUser {
-    font-size: 20px;
-
+    font-size: 17px;
   }
 
   .messageData {
-    justify-content: center;
     display: flex;
+    justify-content: center;
     margin: 0 auto;
     padding: 0;
     text-align: center;
   }
 }
+
 </style>
   

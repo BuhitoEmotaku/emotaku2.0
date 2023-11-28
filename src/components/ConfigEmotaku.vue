@@ -1,7 +1,8 @@
 <template>
   <div class="emotakuConfig">
-    <span class="clickConfig" id="mainRefreshConfig"><b v-if="!hasMouseMoved" class="refresh" id="refreshConfig">↻</b><b
-        v-if="!hasMouseMoved">&nbsp;Click para actualizar!</b><b class="clickDone" v-if="hasMouseMoved">
+    <span class="clickConfig" id="mainRefreshConfig" @click="clickSoundOption()"><b v-if="!hasMouseMoved" class="refresh"
+        >↻</b><b v-if="!hasMouseMoved">&nbsp;Click!</b><b class="clickDone"
+        v-if="hasMouseMoved">
         ✔️Done!✔️</b></span>
     <hr>
     <!-- Checkbox para habilitar/deshabilitar el audio -->
@@ -9,40 +10,56 @@
     <hr>
     <div class="optionListConfig">
       <label>
-        <input type="checkbox" v-model="darkMode" @change="toggleTheme"> Dark Mode
+        <input type="checkbox" v-model="darkMode" @click="clickSoundOption()" @change="toggleTheme"> Dark Mode
       </label>
       <label>
-        <input type="checkbox" v-model="audioEnabled" @change="toggleAudioRain"> Rain Sound
+        <input type="checkbox" v-model="audioEnabled" @click="clickSoundOption()" @change="toggleAudioRain"> Rain Sound
       </label>
       <label>
-        <input type="checkbox" v-model="checkRainEffect" @change="toggleRainEffect"> Rain Effect
+        <input type="checkbox" v-model="checkRainEffect" @click="clickSoundOption()" @change="toggleRainEffect"> Rain
+        Effect
       </label>
-      
-      
-     
+      <label>
+        <input type="checkbox" v-model="checkMuteChat" @click="clickSoundOption()" @change="muteChat"> Mute Chat
+      </label>
+
+
+
     </div>
   </div>
-
 </template>
   
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ref, onMounted, watch } from 'vue';
 import audioLluvia from '@/assets/music/lluvia.mp3';
-import { useCounterStore } from '@/stores/userOutOfPage';
+import clickOption from '@/assets/music/clickOption.mp3';
+
+import { useUserConfig } from '@/stores/userConfigStates';
 
 export default defineComponent({
   name: 'ConfigEmotaku',
   setup() {
-    
 
     //AUDIO LLUVIA CONFIG, PLAY AND PAUSE
     const audioRain = new Audio(audioLluvia) as HTMLAudioElement;
     audioRain.volume = 0.03;
     audioRain.loop = true;
     const audioEnabled = ref(false);
-    const checkRainEffect:any = ref(false);
-    const counterStore = useCounterStore(); 
+    const checkRainEffect: any = ref(false);
+    const userConfigStore = useUserConfig();
+    const checkMuteChat = ref(false);
+
+    //AUDIO CLICK OPTION
+    const clickSound = new Audio(clickOption) as HTMLAudioElement;
+    clickSound.volume = 0.23;
+
+    const clickSoundOption = () => {
+      clickSound.play();
+    };
+
+
+
 
     const playPauseAudioRain = () => {
       if (audioEnabled.value) {
@@ -64,9 +81,18 @@ export default defineComponent({
     const handleAudioMove = () => {
       if (!hasMouseMoved.value) {
         playPauseAudioRain();
-        counterStore.clickedConfig = true;
+        userConfigStore.clickedConfig = true;
         const refreshItem = document.getElementById('mainRefreshConfig');
-        if (refreshItem) refreshItem.style.backgroundColor = 'rgb(154, 238, 146)';
+        if (refreshItem) {
+          refreshItem.style.backgroundColor = 'rgb(154, 238, 146)';
+          const buttonClickElement: HTMLElement | null = document.getElementById('mainRefreshConfig');
+          buttonClickElement?.classList.add('closeClickButton');
+          if (buttonClickElement) {
+            setTimeout(() => {
+              buttonClickElement.style.display = "none";
+            }, 2000);
+          }
+        }
         hasMouseMoved.value = true;
 
       } else {
@@ -77,10 +103,10 @@ export default defineComponent({
     const toggleRainEffect = () => {
       checkRainEffect.value = checkRainEffect.value ? true : false;
       console.log(checkRainEffect.value)
-      counterStore.checkRainEffect = checkRainEffect.value;
+      userConfigStore.checkRainEffect = checkRainEffect.value;
       localStorage.setItem('RainEffect', checkRainEffect.value.toString());
     };
-    
+
 
 
 
@@ -128,6 +154,12 @@ export default defineComponent({
       }
     };
 
+    const muteChat = () => {
+      checkMuteChat.value = checkMuteChat.value ? true : false;
+      userConfigStore.checkMuteChat = checkMuteChat.value;
+      localStorage.setItem('muteChat', checkMuteChat.value.toString());
+    };
+
     // Escucha cambios en el valor de 'theme'
     watch(theme, (newTheme) => {
       localStorage.setItem('theme', newTheme);
@@ -139,13 +171,13 @@ export default defineComponent({
       const checkRain = localStorage.getItem('audioEnabled');
       if (checkRain == null) localStorage.setItem('audioEnabled', `${audioEnabled.value}`);
       else audioEnabled.value = JSON.parse(checkRain);
-      const reloadAudio = document.getElementById('refreshConfig');
+      const reloadAudio = document.getElementById('mainRefreshConfig');
       if (reloadAudio) reloadAudio.addEventListener('click', handleAudioMove);
 
       const RainEffect = localStorage.getItem('RainEffect');
       if (RainEffect == null) localStorage.setItem('RainEffect', 'false');
       else checkRainEffect.value = String(RainEffect) == "true";
-      counterStore.checkRainEffect = checkRainEffect.value;
+      userConfigStore.checkRainEffect = checkRainEffect.value;
       //Theme checker
       prefersDarkTheme.addEventListener('change', handleThemeChange);
       // Forzar una llamada a handleThemeChange al inicio
@@ -155,11 +187,20 @@ export default defineComponent({
       }
       else checkLocalTheme();
 
+      const checkMuteChatLocal = localStorage.getItem('muteChat');
+
+      if (checkMuteChatLocal == null) {
+        localStorage.setItem('muteChat', `${checkMuteChat.value}`);
+
+      } else {
+        checkMuteChat.value = JSON.parse(checkMuteChatLocal);
+        userConfigStore.checkMuteChat = checkMuteChat.value;
+      }
 
 
     });
 
-    return { audioEnabled, darkMode, hasMouseMoved, checkRainEffect, playPauseAudioRain, toggleAudioRain, toggleTheme, toggleRainEffect };
+    return { checkMuteChat, audioEnabled, darkMode, hasMouseMoved, checkRainEffect, muteChat, clickSoundOption, playPauseAudioRain, toggleAudioRain, toggleTheme, toggleRainEffect };
   }
 });
 </script>
@@ -172,37 +213,42 @@ export default defineComponent({
 }
 
 .clickConfig {
-  background-color: rgb(151, 74, 74);
-  display: flex;
+  cursor: pointer;
   align-items: center;
-  justify-content: center;
+  background-color: rgb(151, 74, 74);
   border: 2px solid black;
-  margin-bottom: 10px;
-  padding: 10px;
+  border: 2px solid white;
   border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
 .clickDone {
-  padding: 12px 0 12px 0;
   color: black;
+  padding: 12px 0 12px 0;
 }
 
 .refresh {
-  width: auto;
+  animation: 1s refreshLoad infinite;
   display: inline-block;
   font-size: 30px;
-  cursor: pointer;
-  animation: 1s refreshLoad infinite;
-
+  width: auto;
 }
+
 .titleConfig {
   padding: 3px 0 3px 0;
 }
+
 .optionListConfig {
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
   gap: 5px;
+  margin-top: 10px;
+}
+
+.closeClickButton {
+  animation: closeClickButtonAnimation 2s ease-out;
 }
 
 @keyframes refreshLoad {
@@ -212,6 +258,18 @@ export default defineComponent({
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes closeClickButtonAnimation {
+  from {
+    max-height: 100px;
+    opacity: 1;
+  }
+
+  to {
+    max-height: 0;
+    opacity: 0;
   }
 }
 </style>

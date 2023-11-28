@@ -14,16 +14,16 @@ import useAssets from '@/assets/scripts/composable';
 export default defineComponent({
   name: 'SpriteMovingGame',
   setup() {
-    
+
     const spriteX = ref(0);
     const spriteY = ref(0);
     const containerHeight = 270; // Alto del contenedor
     const borderGameSprites = ref('2px solid white');
     const arraySpriteOrden = ref([
-    useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png'),
-    useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png'),
-    useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png'),
-    useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png')
+      useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png'),
+      useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png'),
+      useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png'),
+      useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png')
     ]);
 
     const spriteChosen = ref(useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png'));
@@ -88,9 +88,9 @@ export default defineComponent({
             spriteChosen.value = useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png');
             spriteChosen.value =
               arraySpriteOrden.value[0] = arraySpriteOrden.value[0] ===
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png') ?
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_2.png') : 
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png');
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png') ?
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_2.png') :
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-b_hs_250_1.png');
             break;
           case 'ArrowDown':
             moveSprite(0, step); // Mover hacia abajo
@@ -98,18 +98,18 @@ export default defineComponent({
             spriteChosen.value = useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png');
             spriteChosen.value =
               arraySpriteOrden.value[2] = arraySpriteOrden.value[2] ===
-              useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png') ?
-              useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_2.png') : 
-              useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png');
+                useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png') ?
+                useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_2.png') :
+                useAssets('/src/assets/images/sprites/Ho-Oh/o_hs_250_1.png');
             break;
           case 'ArrowLeft':
             moveSprite(-step, 0); // Mover hacia la izquierda
             spriteChosen.value = useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png');
             spriteChosen.value =
               arraySpriteOrden.value[3] = arraySpriteOrden.value[3] ===
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png') ? 
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_2.png') : 
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png');
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png') ?
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_2.png') :
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-l_hs_250_1.png');
             break;
           case 'ArrowRight':
             moveSprite(step, 0); // Mover hacia la derecha
@@ -117,9 +117,9 @@ export default defineComponent({
             spriteChosen.value = useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png');
             spriteChosen.value =
               arraySpriteOrden.value[1] = arraySpriteOrden.value[1] ===
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png') ? 
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_2.png') : 
-              useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png');
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png') ?
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_2.png') :
+                useAssets('/src/assets/images/sprites/Ho-Oh/o-r_hs_250_1.png');
             break;
         }
       }
@@ -151,14 +151,13 @@ export default defineComponent({
 
 <style scoped>
 #gamePokemonSprites {
-  position: relative;
-  width: 100%;
-  height: 270px;
-  outline: v-bind(borderGameSprites);
   background-image: url('../../assets/images/sprites/backgroundPokemonSprites.gif');
   background-size: cover;
-  /* Para que el contenedor pueda recibir eventos de teclado */
   border-radius: 14px;
+  height: 270px;
+  outline: v-bind(borderGameSprites);
+  position: relative;
+  width: 100%;
 }
 
 .titleSpriteGame {
@@ -166,17 +165,15 @@ export default defineComponent({
 }
 
 #sprite {
+  height: 64px;
   position: absolute;
   width: 56px;
-  height: 64px;
 }
-
 
 #sprite:hover {
   cursor: pointer;
   filter: hue-rotate(10deg);
-  transform: scale(1.2);
   image-rendering: crisp-edges;
+  transform: scale(1.2);
 }
-
 </style>

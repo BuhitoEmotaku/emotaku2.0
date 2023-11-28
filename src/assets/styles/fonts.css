@@ -33,5 +33,5 @@
 }
 @font-face {
     font-family: "Pixel Titles";
-    src: url("../fonts/Crang.ttf") format("truetype");
+    src: url("../fonts/Crang.woff2") format("woff2");
 }

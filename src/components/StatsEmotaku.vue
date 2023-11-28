@@ -3,8 +3,8 @@
     <div class="titleStats">
       <h1>Stats</h1>
     </div>
-   <h1 class="totalVisits">Visitas totales -> {{ ApiStoreController.totalEntries }}</h1>
-   <h1 class="uniqueUsers">Usuarios únicos -> {{ ApiStoreController.uniqueEntries }}</h1>
+    <h1 class="totalVisits">Visitas totales <span class="statsNumber">{{ ApiStoreController.totalEntries }}</span></h1>
+    <h1 class="uniqueUsers">Usuarios únicos <span class="statsNumber">{{ ApiStoreController.uniqueEntries }}</span></h1>
 
   </div>
 </template>
@@ -30,14 +30,21 @@ export default defineComponent({
 .statsContent {
   padding: 15px;
 }
+
 .titleStats {
-  text-align: center;
-  font-size: 27px;
   color: #29ff36;
+  font-size: 27px;
   padding: 0 6px 6px 6px;
-}
-.totalVisits {
-padding-bottom: 10px;
+  text-align: center;
 }
 
+.totalVisits {
+  padding-bottom: 10px;
+}
+
+.statsNumber {
+  color: #ffcc02;
+  font-family: Monaco;
+  font-size: 21px;
+}
 </style>
