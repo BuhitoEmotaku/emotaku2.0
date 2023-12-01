@@ -1,6 +1,8 @@
 <template>
   <div class="stickersSlidingContainer">
-    <marquee behavior="alternate" direction="both">
+    <marquee behavior="alternate" direction="both"
+    onmouseover="stop()"
+    onmouseout="start()">
       <div class="stickersSlidingContent">
         <div v-for="media in emoMedia" :key="media.url">
           <template v-if="media.type === 'image'">
@@ -8,7 +10,7 @@
           </template>
           <template v-else>
             <video class="videoStickers" autoplay loop muted playsinline>
-              <source :src="media.url" type="video/webm"/>
+              <source :src="media.url" type="video/webm" />
             </video>
           </template>
         </div>
@@ -18,26 +20,42 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
+import { defineComponent, ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import specificAssetsSearch from '@/assets/scripts/specificAssetsSearch';
+import { useUserConfig } from '@/stores/userConfigStates';
 
 export default defineComponent({
   name: 'StickersSliding',
   setup() {
+
+    const userConfigStore = useUserConfig();
+    let emoImages = ref<any>([]);
     const emoMedia = ref<any>([]);
 
-    onMounted(() => {
-      const emoImages = specificAssetsSearch('emoStickers');
-      emoMedia.value = emoImages.map((media) => {
+    const changeStickers = () => {
+      if (userConfigStore.emoStyler) {
+        emoImages = [...specificAssetsSearch('emoStickers')];
+      } else {
+        emoImages = [...specificAssetsSearch('otakuStickers')];
+      }
+      emoMedia.value = emoImages.map((media: any) => {
         const fileExtension = media.toLowerCase().split('.').pop();
-        const isVideo = fileExtension !== undefined && ['mp4', 'webm'].includes(fileExtension);
-        const isImage = fileExtension !== undefined && ['png', 'jpg', 'jpeg', 'webp', 'gif'].includes(fileExtension);
+        const isVideo =  ['mp4', 'webm'].includes(fileExtension);
+        const isImage = ['png', 'jpg', 'jpeg', 'webp', 'gif'].includes(fileExtension);
 
         return { type: isVideo ? 'video' : isImage ? 'image' : 'unknown', url: media };
       });
+
+    }
+    onMounted(() => {
+      changeStickers();
     });
 
     onBeforeUnmount(() => { });
+
+    watch(() => userConfigStore.emoStyler, () => {
+      changeStickers();
+    });
 
     return {
       emoMedia,

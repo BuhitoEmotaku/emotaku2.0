@@ -49,7 +49,7 @@ h1 {
 }
 
 .prResumeEmotaku {
-  color: #a87fd2;
+  /*color: #a87fd2;*/
   text-align: right;
 }
 

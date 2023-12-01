@@ -10,7 +10,7 @@
     <hr>
     <div class="optionListConfig">
       <label>
-        <input type="checkbox" v-model="darkMode" @click="clickSoundOption()" @change="toggleTheme"> Dark Mode
+        <input type="checkbox" v-model="userConfigStore.emoStyler" @click="clickSoundOption()" @change="toggleTheme"> Emo Mode
       </label>
       <label>
         <input type="checkbox" v-model="audioEnabled" @click="clickSoundOption()" @change="toggleAudioRain"> Rain Sound
@@ -22,8 +22,6 @@
       <label>
         <input type="checkbox" v-model="checkMuteChat" @click="clickSoundOption()" @change="muteChat"> Mute Chat
       </label>
-
-
 
     </div>
   </div>
@@ -108,9 +106,6 @@ export default defineComponent({
     };
 
 
-
-
-    const darkMode = ref(false); // Valor predeterminado
     const theme = ref('light'); // Valor predeterminado
 
     // Escucha cambios en prefers-color-scheme
@@ -119,12 +114,13 @@ export default defineComponent({
     const toggleTheme = () => {
       const themeStorage = localStorage.getItem('theme');
       if (themeStorage == 'dark') {
-        darkMode.value = false;
+        userConfigStore.emoStyler = false;
         theme.value = 'light';
         localStorage.setItem('theme', 'light');
       }
+      
       else {
-        darkMode.value = true;
+        userConfigStore.emoStyler = true;
         theme.value = 'dark';
         localStorage.setItem('theme', 'dark');
       }
@@ -134,23 +130,25 @@ export default defineComponent({
     const checkLocalTheme = () => {
       const themeStorage = localStorage.getItem('theme');
       if (themeStorage == 'dark') {
-        darkMode.value = true;
+        userConfigStore.emoStyler = true;
         theme.value = 'dark';
       }
       else {
-        darkMode.value = false;
+        userConfigStore.emoStyler = false;
         theme.value = 'light';
         document.body.setAttribute('theme', theme.value);
+        
       }
     }
 
     const handleThemeChange = (e: any) => {
       if (e.matches) {
         theme.value = 'dark';
-        darkMode.value = true;
+        userConfigStore.emoStyler = true;
+        
 
       } else {
-        darkMode.value = false;
+        userConfigStore.emoStyler = false;
       }
     };
 
@@ -196,11 +194,11 @@ export default defineComponent({
         checkMuteChat.value = JSON.parse(checkMuteChatLocal);
         userConfigStore.checkMuteChat = checkMuteChat.value;
       }
-
+      
 
     });
 
-    return { checkMuteChat, audioEnabled, darkMode, hasMouseMoved, checkRainEffect, muteChat, clickSoundOption, playPauseAudioRain, toggleAudioRain, toggleTheme, toggleRainEffect };
+    return { checkMuteChat, audioEnabled, userConfigStore, hasMouseMoved, checkRainEffect, muteChat, clickSoundOption, playPauseAudioRain, toggleAudioRain, toggleTheme, toggleRainEffect };
   }
 });
 </script>

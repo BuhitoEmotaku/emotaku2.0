@@ -8,9 +8,17 @@
   --color-backgroundDark: rgb(0, 0, 0);;
   --colorMainDark: white;
   --outlineContentDark: 2px solid #7ee8cc;
+
+  --color-backgroundHeaderDark: #000000d4;
+
+  --color-titleMusic-statsDark: #fc0;
+
+  --color-backgroundChatDark:  #0f0f0f;
+  --color-backgroundChatHoverDark: #0d0d0d;
+
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
-
+  
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
 
@@ -27,12 +35,18 @@
 /* ---------- LIGHT ROOT ---------- */
 :root {
 
-  --color-backgroundLight: rgb(239, 230, 248);
-  --color-transparentLight: #d7c7d982;
-  
+  --color-backgroundLight: rgba(232, 129, 143, 0.96);
+  --color-transparentLight: #90249d82;
   --colorMainLight: rgb(0, 0, 0);
-  --outlineContentLight: 2px solid #100455;
+
+  --outlineContentLight: 2px solid rgb(89, 1, 50);
   
+  --color-backgroundHeaderLight: rgba(253, 156, 170, 0.53);
+
+  --color-titleMusic-statsLight: #4507ff;
+
+  --color-backgroundChatLight:  #ff7aae;
+  --color-backgroundChatHoverLight: #fd88b6;
 
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
@@ -58,6 +72,13 @@
     --color-colorMain: var(--colorMainDark);
     --outlineContent: var(--outlineContentDark);
 
+    --color-backgroundHeader: var(--color-backgroundHeaderDark);
+
+    --color-titleMusic-stats: var(--color-titleMusic-statsDark);
+
+    --color-backgroundChat:  var(--color-backgroundChatDark);
+    --color-backgroundChatHover: var(--color-backgroundChatHoverDark);
+    
     --color-background-soft: var(--vt-c-black-soft);
     --color-background-mute: var(--vt-c-black-mute);
 
@@ -72,6 +93,13 @@
     --color-backgroundMain: var(--color-backgroundLight);
     --color-colorMain: var(--colorMainLight);
     --outlineContent: var(--outlineContentLight);
+
+    --color-backgroundHeader: var(--color-backgroundHeaderLight);
+
+    --color-titleMusic-stats: var(--color-titleMusic-statsLight);
+
+    --color-backgroundChat:  var(--color-backgroundChatLight);
+    --color-backgroundChatHover: var(--color-backgroundChatHoverLight);
 
     --color-background: var(--vt-c-white);
     --color-background-soft: var(--vt-c-black-soft);

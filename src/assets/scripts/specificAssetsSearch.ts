@@ -13,6 +13,12 @@ export default function specificAssetsSearch(assetChosen: any) {
       case "electronic":
       assets = import.meta.glob('@/assets/images/electronic/*', { eager: true });
       break;
+      case "buttonsLeft":
+      assets = import.meta.glob('@/assets/images/88x31Buttons/buttonsLeft/*', { eager: true });
+      break;
+      case "buttonsRight":
+      assets = import.meta.glob('@/assets/images/88x31Buttons/buttonsRight/*', { eager: true });
+      break;
   }
   const allFilePaths: string[] = Object.values(assets).reduce<string[]>((acc, module) => {
     if (module.default) {

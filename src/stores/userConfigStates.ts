@@ -6,6 +6,7 @@ export const useUserConfig = defineStore('userConfigStates', () => {
   const clickedConfig = ref(false);
   const checkRainEffect = ref(false);
   const checkMuteChat = ref(false);
+  const emoStyler = ref(true);
   
   function handleVisibilityChange(){
     if (document.hidden) {
@@ -19,5 +20,5 @@ export const useUserConfig = defineStore('userConfigStates', () => {
     }
   };
 
-  return { checkerOnWeb, clickedConfig, checkRainEffect, checkMuteChat, handleVisibilityChange }
+  return { checkerOnWeb, clickedConfig, checkRainEffect, checkMuteChat,emoStyler,  handleVisibilityChange }
 })

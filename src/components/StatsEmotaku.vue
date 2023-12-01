@@ -43,7 +43,7 @@ export default defineComponent({
 }
 
 .statsNumber {
-  color: #ffcc02;
+  color: var(--color-titleMusic-stats);
   font-family: Monaco;
   font-size: 21px;
 }

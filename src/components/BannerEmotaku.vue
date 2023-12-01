@@ -131,7 +131,7 @@ span {
 }
 
 .imgInsideGirl {
-  background-color: #000000d4;
+  background-color: var(--color-backgroundHeader);
   overflow: hidden;
 }
 

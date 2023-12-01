@@ -15,7 +15,7 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
   const numUsersConnected = ref<any>(0);
 
   const totalEntries = ref<any>(0);
-  const totalEntriesStats = ref<any>(0);
+  const userNumberEntry = ref<any>(0);
   const uniqueEntries = ref<any>(0);
   const totalEntriesChecker = ref<any>(false);
 
@@ -110,8 +110,8 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
         else if ('totalEntries' in parsedMessage) {
           totalEntries.value = parseInt(parsedMessage.totalEntries);
           uniqueEntries.value = parseInt(parsedMessage.uniqueEntries);
-          if (!totalEntriesChecker.value) {
-            totalEntriesStats.value = totalEntries.value;
+          if (!totalEntriesChecker.value) {   
+            userNumberEntry.value = totalEntries.value;
             totalEntriesChecker.value = true;
           }
 
@@ -140,14 +140,15 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
       : '';
     //const processedMessage = await processMessages(text); // Procesa el mensaje antes de guardarlo
     const timezone = new Date().getTime() / 1000;
-
+    ;filteredTextParts
     return {
       createdAt: timezone,
       message: await processMessage(filteredTextParts), // Utiliza el mensaje procesado
       userName,
-
+      numberUser: userNumberEntry.value
     }
   }
+  
 
   const createMessage = async (message: any) => { // Asegurarse de que id sea de tipo any o definir un tipo específico
     const dataMessage = await sendMessage(message);
@@ -262,7 +263,6 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
       const userIdPatched = String(localStorage.getItem('userID')); // Obtén el ID del usuario autenticado
       const entryData = { timestamp: timezone, userName: userId };
       const response = await emotakuServices.createEntry(JSON.stringify(entryData));
-
     } catch (error) {
       console.error('Error creating Emotaku entry');
     }
@@ -275,7 +275,6 @@ export const useApiStore = defineStore('apiEmotakuStore', () => {
     checkerNewMessages,
     numUsersConnected,
     totalEntries,
-    totalEntriesStats,
     uniqueEntries,
     allMusic,
     songSelected,

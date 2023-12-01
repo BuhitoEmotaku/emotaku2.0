@@ -189,6 +189,7 @@ export default defineComponent({
 <style scoped>
 .chatEmotakuStyler {
   border: 2px solid white;
+  background-color: #000;
   border-radius: 10px;
   max-height: 410px;
   overflow: auto;
@@ -246,7 +247,6 @@ export default defineComponent({
 }
 
 .messageToSend {
-  background-color: #000;
   border: 1px solid #383838;
   color: #fff;
   flex-grow: 3;
@@ -276,7 +276,7 @@ export default defineComponent({
 }
 
 .chatEmotakuUnique {
-  background-color: #0f0f0f;
+  background-color: var(--color-backgroundChat);
   border-radius: 5px;
   margin: 5px 0 5px 0;
   padding: 6px 6px 14px 6px;
@@ -284,7 +284,7 @@ export default defineComponent({
 }
 
 .chatEmotakuUnique:hover {
-  background-color: #0d0d0d;
+  background-color: var(--color-backgroundChatHover);
 }
 
 .messagesContainer {

@@ -220,7 +220,7 @@ export default defineComponent({
 }
 
 .titleDJEmotaku {
-  color: #f09a3f;
+  color: var(--color-titleMusic-stats);
   padding: 11px 0 11px 0;
 }
 

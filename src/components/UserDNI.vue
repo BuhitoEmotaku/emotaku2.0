@@ -187,6 +187,10 @@ export default defineComponent({
   color: #000;
 }
 
+span.selected:hover {
+  background-color: grey;
+}
+
 .nameChosen {
   background-color: #574460;
   font-size: 15px;

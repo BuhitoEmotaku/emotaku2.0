@@ -14,12 +14,14 @@
           <aside class="statsEmotaku">
             <StatsEmotaku></StatsEmotaku>
           </aside>
-          <aside class="configAside">
-            <ConfigEmotaku></ConfigEmotaku>
-          </aside>
+          
 
           <aside class="musicAside">
             <MusicEmotaku></MusicEmotaku>
+          </aside>
+
+          <aside class="configAside">
+            <ConfigEmotaku></ConfigEmotaku>
           </aside>
 
         </aside>
@@ -40,7 +42,11 @@
           <aside class="calendarAside">
             <CalendarEmotaku></CalendarEmotaku>
           </aside>
-
+          <div class="buttonsStickers">
+            <ButtonsStickers></ButtonsStickers>
+          </div>
+          
+          
 
 
           <!-- 
@@ -78,7 +84,7 @@ import BuhitoOnlineCheck from '@/components/BuhitoOnlineCheck.vue';
 import MusicEmotaku from '@/components/MusicEmotaku.vue';
 import CalendarEmotaku from '@/components/CalendarEmotaku.vue';
 import UserDNI from '@/components/UserDNI.vue';
-
+import ButtonsStickers from '@/components/decorationEmotaku/buttonsSliding/ButtonsStickers.vue';
 
 
 export default defineComponent({
@@ -95,7 +101,8 @@ export default defineComponent({
     BuhitoOnlineCheck,
     MusicEmotaku,
     CalendarEmotaku,
-    UserDNI
+    UserDNI,
+    ButtonsStickers
   },
   setup() {
 
@@ -137,7 +144,8 @@ export default defineComponent({
 .mainLeft {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  justify-content: space-around;
+  /*gap: 15px;*/
   padding: 12px;
   width: 24%;
 }
