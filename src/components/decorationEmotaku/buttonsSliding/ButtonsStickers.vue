@@ -45,11 +45,12 @@ export default defineComponent({
     const emoMediaLeft = ref<any>([]);
     const emoMediaRight = ref<any>([]);
 
-    const buttonsLeft = specificAssetsSearch('buttonsLeft');
-    const buttonsRight = specificAssetsSearch('buttonsRight');
+    let buttonsLeft = ref<any>([]);
+    let buttonsRight = ref<any>([]);
 
     onMounted(() => {
-
+      buttonsLeft = specificAssetsSearch('buttonsLeft');
+      buttonsRight = specificAssetsSearch('buttonsRight');
 
       emoMediaLeft.value = buttonsLeft.map((media:any) => {
         const fileExtension = media.toLowerCase().split('.').pop();
@@ -59,7 +60,7 @@ export default defineComponent({
         return { type: isVideo ? 'video' : isImage ? 'image' : 'unknown', url: media };
       });
 
-      emoMediaRight.value = buttonsRight.map((media) => {
+      emoMediaRight.value = buttonsRight.map((media:any) => {
         const fileExtension = media.toLowerCase().split('.').pop();
         const isVideo = fileExtension !== undefined && ['mp4', 'webm'].includes(fileExtension);
         const isImage = fileExtension !== undefined && ['png', 'jpg', 'jpeg', 'webp', 'gif'].includes(fileExtension);
@@ -72,7 +73,7 @@ export default defineComponent({
     onBeforeUnmount(() => { });
 
     return {
-      emoMediaLeft, emoMediaRight, buttonsLeft, buttonsRight
+      emoMediaLeft, emoMediaRight
     };
   },
 });
